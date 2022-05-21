@@ -1,0 +1,302 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>information</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+  <div id="modal-header">
+    Eventos
+  </div>
+
+  <div id="outer-modal">
+    <div id="inner-modal">
+
+      <div id="inner-information">
+
+        <div *ngIf="step == 1">
+
+          <ion-row>
+            <ion-col size="12">
+              <div id="search-doc">
+                <ion-icon name="search"></ion-icon>
+                <input type="text" [(ngModel)]="query1">
+                <div style="clear: both;"></div>
+              </div>    
+            </ion-col>
+          </ion-row>
+          
+          <ion-row style="border-bottom: 1px solid #ccc; text-align: center;">
+            <ion-col size="3">Evento</ion-col>
+            <ion-col size="4">Jugador</ion-col>
+            <ion-col size="2">Periodo</ion-col>
+            <ion-col size="2">Minuto</ion-col>
+            <ion-col size="1"></ion-col>
+          </ion-row>
+
+          <div style="height: 271px; overflow: auto;">
+            
+
+            <ion-row *ngFor="let e of prevents | search:query1; let i = index;" style="margin: 8px 0">
+
+              <ion-col size="3">
+                {{e.event}} {{e.type ? '- '+e.type : ''}}
+              </ion-col>
+              <ion-col size="4">
+                {{e.player.name}} <br>
+                <small *ngIf="e.assistant_id">Asistido por <b>{{e.assistant.name}}</b></small>
+                <small *ngIf="e.commited_id"> Cometido a <b>{{e.commited.name}}</b></small>
+                <small *ngIf="e.substitution_id"> Sustituido por <b>{{e.substitution.name}}</b></small>
+              </ion-col>
+              <ion-col size="2">
+                <ion-icon name="radio-button-on-outline" *ngIf="e.period >= 1"></ion-icon>
+                <ion-icon name="radio-button-on-outline" *ngIf="e.period >= 2"></ion-icon>
+                <ion-icon name="radio-button-on-outline" *ngIf="e.period >= 3"></ion-icon>
+                <ion-icon name="radio-button-on-outline" *ngIf="e.period >= 4"></ion-icon>
+              </ion-col>
+              <ion-col size="2">
+                {{e.minute}}'{{e.second}}
+              </ion-col>
+              <ion-col size="1">
+                <span class="">
+                  <ion-button slot="icon-only" color="danger" (click)="delete(e.id)">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </span>
+              </ion-col>
+              
+            </ion-row>
+
+            <ion-row *ngIf="prevents?.length == 0">
+              <ion-col size="12" style="text-align: center; font-size: 14px;">Sin resultados</ion-col>
+            </ion-row>
+
+          </div>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 2">
+                    Nuevo Evento
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="6">
+              <ion-row>
+                
+                <ion-col size="6">
+                  <button class="modal-button success" (click)="pdf()">
+                    PDF
+                  </button>
+                </ion-col>
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="modal.dismiss()">
+                    Cerrar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+          
+          <!-- // -->
+
+        </div>
+
+        <div *ngIf="step == 2">
+
+          <ion-row>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Evento
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="event">
+                  <option selected></option>
+                  <option>Tiro</option>
+                  <option>Pase</option>
+                  <option>Cruzar</option>
+                  <!-- <option>Entrada</option> -->
+                  <option>Falta</option>
+                  <option>Fuera de juego</option>
+                  <option>Driblar</option>
+                  <option>Rotación</option>
+                  <option>Lanzamiento</option>
+                  <option>Saque de esquina</option>
+                  <option>Tiro libre directo</option>
+                  <option>Tiro libre indirecto</option>
+                  <option>Tiro penal</option>
+                  <option>Auto Gol</option>
+                  <option>Tarjeta amarilla</option>
+                  <option>Tarjeta roja</option>
+                  <option>Sustitución</option>
+                </select>
+            </ion-col>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Periodo
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="period">
+                <option *ngFor="let i of periods">{{i}}</option>
+              </select>
+            </ion-col>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Minuto
+              </label>
+
+              <input type="number" style="height: 39px;" class="modal-input" [max]="proyect.minutes" [(ngModel)]="minute">
+            </ion-col>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Segundo
+              </label>
+
+              <input type="number" style="height: 39px;" class="modal-input" max="59" [(ngModel)]="second">
+            </ion-col>
+
+            <ion-col size="4">
+              <label class="modal-label">
+                Equipo
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="team_id" (change)="getPlayers()">
+                  <option selected></option>
+                  <option [value]="t.id" *ngFor="let t of teams">{{t.name}}</option>
+                </select>
+            </ion-col>
+
+            <ion-col size="4">
+              <label class="modal-label">
+                Jugador
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="player_id">
+                  <option selected></option>
+                  <option [value]="p.id" *ngFor="let p of players">{{p.name}}</option>
+                </select>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="event == 'Tiro'">
+              <label class="modal-label">
+                Asistencia
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="assistant_id">
+                  <option selected></option>
+                  <option [value]="p.id" *ngFor="let p of players">{{p.name}}</option>
+                </select>
+            </ion-col> <br>
+
+            <ion-col size="4" *ngIf="event == 'Falta'">
+              <label class="modal-label">
+                Cometido a
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="commited_id">
+                  <option selected></option>
+                  <option [value]="p.id" *ngFor="let p of other_players">{{p.name}}</option>
+                </select>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="event == 'Sustitución'">
+              <label class="modal-label">
+                Sustituido por
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="substitution_id">
+                  <option selected></option>
+                  <option [value]="p.id" *ngFor="let p of players">{{p.name}}</option>
+                </select>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="event == 'Tiro'">
+              <label class="modal-label">
+                Pie
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="foot">
+                  <option selected></option>
+                  <option>Derecho</option>
+                  <option>Izquierdo</option>
+                </select>
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row>
+
+            <ion-col size="4" *ngIf="event == 'Tiro'">
+              <label class="modal-label">
+                Tipo de evento
+              </label> <br>
+
+              <select class="form-control" [(ngModel)]="event_type">
+                  <option>Gol</option>
+                  <option>Tiro lateral izquierdo</option>
+                  <option>Tiro lateral derecho</option>
+                  <option>Cabezazo</option>
+                  <option>Lanzamiento</option>
+                  <option>Tiro de penalti</option>
+                  <option>Tiro libre directo</option>
+                  <option>Desviado</option>
+                  <option>Salvado por el portero</option>
+                </select>
+            </ion-col> <br>
+
+            <ion-col size="12">
+              <label class="modal-label">
+                Notas
+              </label>
+
+              <textarea [(ngModel)]="notes" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+            <!-- <ion-col size="12" *ngIf="event != 'Tarjeta amarilla' || event != 'Tarjeta roja' || event != 'Falta'">
+
+              <ion-row>
+                
+              </ion-row>
+              
+            </ion-col> -->
+
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6" offset="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" [disabled]="event && !player_id" (click)="upEvent()">
+                    Agregar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="step = 1">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,75 @@
+ion-content {
+	--background: transparent;
+}
+ion-page {
+	top: -15% !important;
+}
+
+#outer-modal {
+  clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+  background-color: #222;
+  height: calc(100% - 50px);
+  width: 100%;
+  margin: auto;
+  position: relative;
+  &:before {
+    content: "";
+    clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+    background-image: url(../../../assets/cesped.jpg);
+    background-size: cover;
+    background-position: center;
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    margin: auto;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+  }
+
+  /**/
+
+  #inner-modal {
+  	padding: 16px 32px;
+  	overflow: auto;
+    clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+    background-color: #222;
+    height: 95%;
+    width: 96.5%;
+    margin: auto;
+    position: relative;
+    top: 2.5%;
+    &:before {
+      content: "";
+      clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+      background-color: #222;
+      height: calc(100% - 4px);
+      width: calc(100% - 4px);
+      margin: auto;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+    }
+
+  }
+}
+
+#modal-header {
+    content: "";
+    width: 40%;
+    // height: 20px;
+    text-align: center;
+    background-color: #222;
+    padding: 6px;
+    // top: -28px;
+    position: relative;
+    margin: auto;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
+
+#inner-information {
+	font-size: 12px;
+	line-height: 1.5;
+	text-align: justify;
+	position: relative;
+	z-index: 9999;
+}

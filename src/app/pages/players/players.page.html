@@ -1,0 +1,556 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>information</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+  <div id="modal-header">
+    Analisis de jugadores
+  </div>
+  <div id="outer-modal">
+    <div id="inner-modal">
+
+      <div id="inner-information">
+
+        <div *ngIf="step == 1">
+          <ion-row>
+            <ion-col size="12">
+              <div id="search-doc">
+                <ion-icon name="search"></ion-icon>
+                <input type="text" [(ngModel)]="query">
+                <div style="clear: both;"></div>
+              </div>    
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row>
+            <ion-col size="6" *ngFor="let p of players | search:query; let i = index" (click)="selectedDoc = i; openDoc(p)">
+
+              <div style="padding: 8px; margin-bottom: 20px;" class="Doc" [ngClass]="{'selectedDoc':selectedDoc == i}">
+
+                <span style="position: absolute; right: 4px; top: 2px;">
+                  <ion-button slot="icon-only" color="danger" size="small" (click)="delete(p.id)">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </span>
+
+                <div style="display: flex;">
+                  
+                  <!-- <img src="assets/icono-documento.svg" alt="" style="width: 40%;"> -->
+                  <div class="bg-image" [ngStyle]="{'background-image':'url('+(p.image || 'assets/player.svg')+')'}">
+                    
+                  </div>
+
+                  <div>
+                    <h5 style="margin-top: 0;">{{p.number}} - {{p.name}}<br>
+
+                    <small>{{p.team?.name}}</small> <br> <small>{{p.position}}</small> </h5>
+                  </div>
+                </div>
+
+                <ion-row>
+                  <ion-col size="4">
+                    <label>Edad</label> <br>
+                    {{p.age}}
+                  </ion-col>
+                  <ion-col size="4">
+                    <label>Peso</label> <br>
+                    {{p.weight}}Kg
+                  </ion-col>
+                  <ion-col size="4">
+                    <label>Altura</label> <br>
+                    {{p.height}}cm
+                  </ion-col>
+                </ion-row>
+
+                <!-- <div style="position: relative; top: 8px; text-align: center;">
+                  
+                </div> -->
+
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div *ngIf="step == 2">
+
+          <ion-row>
+            <ion-col size="3">
+
+              <label class="preselect" [ngStyle]="{'background-image':'url('+player_image+')'}">
+                <input type="file" style="display: none" id="team-file" (change)="upload($event,'player_image')">
+              </label>
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Nombre
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_name">
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Número
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_number">
+              
+            </ion-col>
+
+            <ion-col size="3">
+              <label class="modal-label">
+                Posición
+              </label>
+
+              <select [(ngModel)]="player_position" class="form-control" style="top: 10px;">
+                <option>Portero</option>
+                <option>Carrilero</option>
+                <option>Mediocampista</option>
+                <option>Lateral izquierdo</option>
+                <option>Defensa central</option>
+                <option>Lateral derecho</option>
+                <option>Centrocampista Ofensivo</option>
+                <option>Centrocampista Defensivo</option>
+                <option>Extremo Derecho</option>
+                <option>Extremo Izquierdo</option>
+                <option>Mediapunta</option>
+                <option>Delantero</option>
+              </select>
+            </ion-col>
+
+            <!-- <ion-col size="1">
+              <label class="modal-label">
+                Peto
+              </label>
+
+              <div class="team-logo" [ngStyle]="{'background-color':'#fff'}"></div>
+            </ion-col> -->
+
+            <ion-col size="3" offset="3">
+
+              <label class="modal-label">
+                Años
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_age">              
+
+            </ion-col>
+
+            <ion-col size="2">
+
+              <label class="modal-label">
+                Peso
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_weight">
+
+            </ion-col>
+
+            <ion-col size="2">
+
+              <label class="modal-label">
+                Altura
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_height">
+              
+            </ion-col>
+
+            <ion-col size="2" style="text-align: center;">
+              <label class="modal-label">
+                Titular
+              </label>
+
+              <span class=""><ion-toggle [(ngModel)]="player_titular" style="margin-top: 4px; padding-left: 0"></ion-toggle></span>
+            </ion-col>
+
+            <ion-col size="12">
+              <label class="modal-label">
+                Notas
+              </label>
+
+              <textarea [(ngModel)]="player_notes" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="6"></textarea>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 3">
+                    Reportes
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button" (click)="pdfPlayer()">
+                    PDF
+                  </button>
+                </ion-col>
+
+              </ion-row>
+            </ion-col>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" [disabled]="!player_name" (click)="savePlayer()">
+                    Aceptar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="step = 1">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+        <div *ngIf="step == 3">
+
+          <ion-row>
+            <ion-col size="12">
+              <div id="search-doc">
+                <ion-icon name="search"></ion-icon>
+                <input type="text" [(ngModel)]="query1">
+                <div style="clear: both;"></div>
+              </div>    
+            </ion-col>
+          </ion-row>
+          
+          <ion-row style="border-bottom: 1px solid #ccc; text-align: center;">
+            <ion-col size="3">Nombre</ion-col>
+            <ion-col size="3">Tipo</ion-col>
+            <ion-col size="3">Fecha</ion-col>
+            <ion-col size="2">Evaluación</ion-col>
+            <ion-col size="1"></ion-col>
+            
+          </ion-row>
+
+          <div style="height: 271px; overflow: auto;">
+            
+
+            <ion-row *ngFor="let r of reports | search:query1; let i = index;" style="margin: 8px 0">
+              <ion-col size="3">
+                {{r.name}}
+              </ion-col>
+              <ion-col size="3">
+                <span *ngIf="r.type == 1">General</span>
+                <span *ngIf="r.type == 2">Entrenamiento</span>
+                <span *ngIf="r.type == 3">Partido</span>
+              </ion-col>
+              <ion-col size="3">
+                {{r.created_at | date:'dd-MM-yyyy'}}
+              </ion-col>
+              <ion-col size="2">
+                {{ (r.skills + r.psychological + r.technical + r.condition + r.speed) / 5 }}
+              </ion-col>
+              
+              <ion-col size="1">
+                <span class="">
+                  <ion-button slot="icon-only" color="danger" (click)="delete1(r.id)">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </span>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="reports.length == 0">
+              <ion-col size="12" style="text-align: center; font-size: 14px;">Sin resultados</ion-col>
+            </ion-row>
+
+          </div>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 4; report_type = 1">
+                    Añadir Reporte
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="6">
+              <ion-row>
+
+                <ion-col size="6" offset="6">
+                  <button class="modal-button" (click)="step = 2; query1 = ''">
+                    Ok
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+
+        </div>
+
+
+        <!-- /**/ -->
+
+
+        <div *ngIf="step == 4">
+
+          <ion-row>
+
+            <ion-col size="6">
+
+              <label class="modal-label">
+                Nombre del reporte
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="report_name">
+
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Tipo de reporte
+              </label>
+
+              <select [(ngModel)]="report_type" class="form-control" style="top: 10px;">
+                <option value="1">General</option>
+                <option value="2">Entrenamiento</option>
+                <option value="3">Partido</option>
+              </select>
+            </ion-col>
+
+            <ion-col size=12></ion-col>
+
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="12">
+                  <label class="modal-label">
+                    Habilidades Tácticas
+                  </label>
+                </ion-col>
+
+                <ion-col size="2">
+                  <input type="radio" id="sk_0" checked class="punctuations" name="skills" value="0">
+                  <label for="sk_0">x</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sk_1" class="punctuations" name="skills" value="1">
+                  <label for="sk_1">1</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sk_2" class="punctuations" name="skills" value="2">
+                  <label for="sk_2">2</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sk_3" class="punctuations" name="skills" value="3">
+                  <label for="sk_3">3</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sk_4" class="punctuations" name="skills" value="4">
+                  <label for="sk_4">4</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sk_5" class="punctuations" name="skills" value="5">
+                  <label for="sk_5">5</label>
+                </ion-col>
+              </ion-row>
+              <div class="separator"></div>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="12">
+                  <label class="modal-label">
+                    Psicológico
+                  </label>
+                </ion-col>
+
+                <ion-col size="2">
+                  <input type="radio" id="ps_0" checked class="punctuations" name="psychological" value="0">
+                  <label for="ps_0">x</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="ps_1" class="punctuations" name="psychological" value="1">
+                  <label for="ps_1">1</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="ps_2" class="punctuations" name="psychological" value="2">
+                  <label for="ps_2">2</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="ps_3" class="punctuations" name="psychological" value="3">
+                  <label for="ps_3">3</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="ps_4" class="punctuations" name="psychological" value="4">
+                  <label for="ps_4">4</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="ps_5" class="punctuations" name="psychological" value="5">
+                  <label for="ps_5">5</label>
+                </ion-col>
+              </ion-row>
+              <div class="separator"></div>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="12">
+                  <label class="modal-label">
+                    Técnico
+                  </label>
+                </ion-col>
+
+                <ion-col size="2">
+                  <input type="radio" id="th_0" checked class="punctuations" name="technical" value="0">
+                  <label for="th_0">x</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="th_1" class="punctuations" name="technical" value="1">
+                  <label for="th_1">1</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="th_2" class="punctuations" name="technical" value="2">
+                  <label for="th_2">2</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="th_3" class="punctuations" name="technical" value="3">
+                  <label for="th_3">3</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="th_4" class="punctuations" name="technical" value="4">
+                  <label for="th_4">4</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="th_5" class="punctuations" name="technical" value="5">
+                  <label for="th_5">5</label>
+                </ion-col>
+              </ion-row>
+              <div class="separator"></div>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="12">
+                  <label class="modal-label">
+                    Condición/Coordinación
+                  </label>
+                </ion-col>
+
+                <ion-col size="2">
+                  <input type="radio" id="cn_0" checked class="punctuations" name="condition" value="0">
+                  <label for="cn_0">x</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="cn_1" class="punctuations" name="condition" value="1">
+                  <label for="cn_1">1</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="cn_2" class="punctuations" name="condition" value="2">
+                  <label for="cn_2">2</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="cn_3" class="punctuations" name="condition" value="3">
+                  <label for="cn_3">3</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="cn_4" class="punctuations" name="condition" value="4">
+                  <label for="cn_4">4</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="cn_5" class="punctuations" name="condition" value="5">
+                  <label for="cn_5">5</label>
+                </ion-col>
+              </ion-row>
+              <div class="separator"></div>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="12">
+                  <label class="modal-label">
+                    Velocidad
+                  </label>
+                </ion-col>
+
+                <ion-col size="2">
+                  <input type="radio" id="sp_0" checked class="punctuations" name="speed" value="0">
+                  <label for="sp_0">x</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sp_1" class="punctuations" name="speed" value="1">
+                  <label for="sp_1">1</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sp_2" class="punctuations" name="speed" value="2">
+                  <label for="sp_2">2</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sp_3" class="punctuations" name="speed" value="3">
+                  <label for="sp_3">3</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sp_4" class="punctuations" name="speed" value="4">
+                  <label for="sp_4">4</label>
+                </ion-col>
+                <ion-col size="2">
+                  <input type="radio" id="sp_5" class="punctuations" name="speed" value="5">
+                  <label for="sp_5">5</label>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size=12>
+              <div class="separator"></div>
+            </ion-col>
+
+            <ion-col size="12">
+              <label class="modal-label">
+                Conclusiones
+              </label>
+
+              <textarea [(ngModel)]="report_conclusion" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="6"></textarea>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            
+            <ion-col size="6" offset="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="saveReport()">
+                    Aceptar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="step = 3">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+
+</ion-content>

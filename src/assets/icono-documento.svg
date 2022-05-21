@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="45px" height="58px" viewBox="0 0 45 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>documento</title>
+    <g id="Diseños" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Abrir-Proyecto" transform="translate(-244.000000, -149.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group-4" transform="translate(191.000000, 149.000000)">
+                <g id="documento" transform="translate(53.000000, 0.000000)">
+                    <path d="M34.28784,0 L0,0 L0,58 L45,58 L45,11.3031835 L34.28784,0 Z M34.8,3.15280825 L42.012,10.7628866 L34.8,10.7628866 L34.8,3.15280825 Z M43.2,56.2061856 L1.8,56.2061856 L1.8,1.79381443 L33,1.79381443 L33,12.556701 L43.2,12.556701 L43.2,56.2061856 Z" id="Shape"></path>
+                    <rect id="Rectangle" x="5" y="23" width="34" height="2"></rect>
+                    <rect id="Rectangle" x="6" y="17" width="14" height="2"></rect>
+                    <rect id="Rectangle" x="5" y="29" width="34" height="2"></rect>
+                    <rect id="Rectangle" x="5" y="35" width="34" height="2"></rect>
+                    <rect id="Rectangle" x="5" y="41" width="34" height="2"></rect>
+                    <rect id="Rectangle" x="5" y="47" width="34" height="2"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

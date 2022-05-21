@@ -1,0 +1,468 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>information</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+  <div id="modal-header" *ngIf="step == 3">
+    Configurar Equipos
+  </div>
+
+  <div id="modal-header" *ngIf="step == 4">
+    Nuevo Equipo
+  </div>
+
+  <div id="modal-header" *ngIf="step == 5">
+    Plantilla
+  </div>
+
+  <div id="modal-header" *ngIf="step == 6">
+    Datos del Jugador
+  </div>
+
+  <div id="modal-header" *ngIf="step == 7">
+    Editar Equipo
+  </div>
+  <div id="outer-modal">
+    <div id="inner-modal">
+
+      <div id="inner-information">
+
+        <div *ngIf="step == 3">
+
+          <ion-row>
+            <ion-col size="12">
+              <div id="search-doc">
+                <ion-icon name="search"></ion-icon>
+                <input type="text" [(ngModel)]="query1">
+                <div style="clear: both;"></div>
+              </div>    
+            </ion-col>
+          </ion-row>
+          
+          <ion-row style="border-bottom: 1px solid #ccc; text-align: center;">
+            <ion-col size="3">Logo</ion-col>
+            <ion-col size="4">Nombre</ion-col>
+            <ion-col size="4">Fecha de Creación</ion-col>
+            <!-- <ion-col size="3">Favorito</ion-col> -->
+            <ion-col size="1"></ion-col>
+          </ion-row>
+
+          <div style="height: 271px; overflow: auto;">
+            
+
+            <ion-row *ngFor="let t of teams | search:query1; let i = index;" style="margin: 8px 0" [ngClass]="{'selectedTeam': team == t.id}">
+              <ion-col size="3" (click)="team = t.id">
+                <div class="team-logo" [ngStyle]="{'background-image':'url('+t.image+')'}"></div>
+              </ion-col>
+              <ion-col size="4" (click)="team = t.id" style="text-align: center;">
+                <span class="reconfigure">{{t.name}}</span>
+              </ion-col>
+              <ion-col size="4" (click)="team = t.id" style="text-align: center;">
+                <span class="reconfigure">{{t.created_at | date:'dd-MM-yyyy'}}</span>
+              </ion-col>
+              <!-- <ion-col size="3">
+                <span class=""><ion-toggle style="margin-top: 4px"></ion-toggle></span>
+              </ion-col> -->
+              <ion-col size="1">
+                <span class="">
+                  <ion-button slot="icon-only" color="danger" (click)="delete(t.id)">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </span>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="teams.length == 0">
+              <ion-col size="12" style="text-align: center; font-size: 14px;">Sin resultados</ion-col>
+            </ion-row>
+
+          </div>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="goCreate()">
+                    Nuevo Equipo
+                  </button>
+                </ion-col>
+                <ion-col size="6">
+                  <button class="modal-button" *ngIf="team != null" (click)="step = 5; preRosters(); prePlayers();">
+                    Plantilla
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" *ngIf="team != null" (click)="step = 7; edit();">
+                    Editar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button" (click)="modal.dismiss()">
+                    Cerrar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+
+        </div>
+
+        <div *ngIf="step == 4">
+
+          <ion-row>
+            <ion-col size="3">
+
+              <label class="preselect" [ngStyle]="{'background-image':'url('+team_image+')'}">
+                <input type="file" style="display: none" id="team-file" (change)="upload($event,'team_image')">
+              </label>
+
+            </ion-col>
+
+            <ion-col size="9">
+
+              <label class="modal-label">
+                Nombre del equipo
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="team_name">
+            </ion-col>
+          </ion-row>
+
+          <!-- <ion-row>
+            <ion-col offset="4" size="4">
+              <button class="button-login" [disabled]="!team_name" (click)="saveTeam()">
+                Agregar
+              </button>
+            </ion-col>
+          </ion-row> -->
+
+          <ion-row>
+            <ion-col size="6" offset="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" [disabled]="!team_name" (click)="saveTeam()">
+                    Agregar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="step = 3">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+        <!-- /**/ -->
+
+        <div *ngIf="step == 5">
+
+          <ion-row>
+            <ion-col size="12">
+              <div id="search-doc">
+                <ion-icon name="search"></ion-icon>
+                <input type="text" [(ngModel)]="query2">
+                <div style="clear: both;"></div>
+              </div>    
+            </ion-col>
+          </ion-row>
+          
+          <ion-row style="border-bottom: 1px solid #ccc; text-align: center;">
+            <ion-col size="3">Nombre</ion-col>
+            <ion-col size="3">Número</ion-col>
+            <ion-col size="3">Posición</ion-col>
+            <ion-col size="2">Titular</ion-col>
+            <!-- <ion-col size="2">Peto</ion-col> -->
+            <ion-col size="1"></ion-col>
+            
+          </ion-row>
+
+          <div style="height: 271px; overflow: auto;">
+            
+
+            <ion-row *ngFor="let r of rosters | search:query2; let i = index;" style="margin: 8px 0">
+              <ion-col size="3">
+                <span class="reconfigure">
+                  <select [attr.data-id]="r.id" class="form-control players" (change)="updateRoster(r,$event,'player')">
+                    <option selected></option>
+                    <option [selected]="p.id == r.player_id" *ngFor="let p of players | double:players_selected:r.player_id" [value]="p.id">{{p.name}}</option>
+                  </select>
+                </span>
+                <!-- <span class="reconfigure">{{r.player.name}}</span> -->
+              </ion-col>
+              <ion-col size="3">
+                <span class="reconfigure">
+                  <input type="number" [attr.data-id]="r.id" class="form-control numbers" [value]="r.number" (change)="updateRoster(r,$event,'number')">
+                </span>
+              </ion-col>
+              <ion-col size="3">
+                <span class="reconfigure">
+                  <select [attr.data-id]="r.id" class="form-control positions" (change)="updateRoster(r,$event,'position')">                    
+                    <option [selected]="r.position == 'Portero'">Portero</option>
+                    <option [selected]="r.position == 'Carrilero'">Carrilero</option>
+                    <option [selected]="r.position == 'Mediocampista'">Mediocampista</option>
+                    <option [selected]="r.position == 'Lateral izquierdo'">Lateral izquierdo</option>
+                    <option [selected]="r.position == 'Defensa central'">Defensa central</option>
+                    <option [selected]="r.position == 'Lateral derecho'">Lateral derecho</option>
+                    <option [selected]="r.position == 'Centrocampista Ofensivo'">Centrocampista Ofensivo</option>
+                    <option [selected]="r.position == 'Centrocampista Defensivo'">Centrocampista Defensivo</option>
+                    <option [selected]="r.position == 'Extremo Derecho'">Extremo Derecho</option>
+                    <option [selected]="r.position == 'Extremo Izquierdo'">Extremo Izquierdo</option>
+                    <option [selected]="r.position == 'Mediapunta'">Mediapunta</option>
+                    <option [selected]="r.position == 'Delantero'">Delantero</option>
+                  </select>
+                </span>
+              </ion-col>
+              <ion-col size="2" style="text-align: center;">
+                <span class=""><ion-toggle [attr.data-id]="r.id" [checked]="r.titular" class="titular" style="margin-top: 4px; padding-left: 0"></ion-toggle></span>
+              </ion-col>
+              <!-- <ion-col size="2">
+                <div class="team-logo" [ngStyle]="{'background-color': (r.peto || '#fff') }"></div>
+              </ion-col> -->
+              <ion-col size="1">
+                <span class="">
+                  <ion-button slot="icon-only" color="danger" (click)="delete2(r.id,r.team_id)">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </span>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="rosters.length == 0">
+              <ion-col size="12" style="text-align: center; font-size: 14px;">Sin resultados</ion-col>
+            </ion-row>
+
+          </div>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 6">
+                    Añadir Jugador
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button danger" style="width: 50%; float: right; height: 42px;" (click)="addRoster({})">
+                    <ion-icon style="color: crimson;" name="add-outline"></ion-icon>
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 3">
+                    Ok
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+
+        </div>
+
+
+        <!-- /**/ -->
+
+        <div *ngIf="step == 6">
+
+          <ion-row>
+            <ion-col size="3">
+
+              <label class="preselect" [ngStyle]="{'background-image':'url('+player_image+')'}">
+                <input type="file" style="display: none" id="team-file" (change)="upload($event,'player_image')">
+              </label>
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Nombre
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_name">
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <label class="modal-label">
+                Número
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_number">
+              
+            </ion-col>
+
+            <ion-col size="3">
+              <label class="modal-label">
+                Posición
+              </label>
+
+              <select [(ngModel)]="player_position" class="form-control" style="top: 10px;">
+                <option>Portero</option>
+                <option>Carrilero</option>
+                <option>Mediocampista</option>
+                <option>Lateral izquierdo</option>
+                <option>Defensa central</option>
+                <option>Lateral derecho</option>
+                <option>Centrocampista Ofensivo</option>
+                <option>Centrocampista Defensivo</option>
+                <option>Extremo Derecho</option>
+                <option>Extremo Izquierdo</option>
+                <option>Mediapunta</option>
+                <option>Delantero</option>
+              </select>
+            </ion-col>
+
+            <!-- <ion-col size="1">
+              <label class="modal-label">
+                Peto
+              </label>
+
+              <div class="team-logo" [ngStyle]="{'background-color':'#fff'}"></div>
+            </ion-col> -->
+
+            <ion-col size="3" offset="3">
+
+              <label class="modal-label">
+                Años
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_age">              
+
+            </ion-col>
+
+            <ion-col size="2">
+
+              <label class="modal-label">
+                Peso
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_weight">
+
+            </ion-col>
+
+            <ion-col size="2">
+
+              <label class="modal-label">
+                Altura
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_height">
+              
+            </ion-col>
+
+            <ion-col size="2" style="text-align: center;">
+              <label class="modal-label">
+                Titular
+              </label>
+
+              <span class=""><ion-toggle [(ngModel)]="player_titular" style="margin-top: 4px; padding-left: 0"></ion-toggle></span>
+            </ion-col>
+
+            <ion-col size="12">
+              <label class="modal-label">
+                Notas
+              </label>
+
+              <textarea [(ngModel)]="player_notes" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="6"></textarea>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="6" offset="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" [disabled]="!player_name" (click)="savePlayer()">
+                    Agregar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="step = 5">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+        <!-- /**/ -->
+
+        <div *ngIf="step == 7">
+
+          <ion-row>
+            <ion-col size="3">
+
+              <label class="preselect" [ngStyle]="{'background-image':'url('+update_team_image+')'}">
+                <input type="file" style="display: none" id="team-file" (change)="upload($event,'update_team_image')">
+              </label>
+
+            </ion-col>
+
+            <ion-col size="9">
+
+              <label class="modal-label">
+                Nombre del equipo
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="update_team_name">
+            </ion-col>
+          </ion-row>
+
+          <!-- <ion-row>
+            <ion-col offset="4" size="4">
+              <button class="button-login" [disabled]="!update_team_name" (click)="saveTeam()">
+                Agregar
+              </button>
+            </ion-col>
+          </ion-row> -->
+
+          <ion-row>
+            <ion-col size="6" offset="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" [disabled]="!update_team_name" (click)="updateTeam()">
+                    Guardar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="step = 3">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

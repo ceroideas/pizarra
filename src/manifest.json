@@ -1,0 +1,14 @@
+{
+  "name": "AFECFA",
+  "short_name": "AFECFA",
+  "start_url": "index.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "assets/icon/favicon.png",
+    "sizes": "100x100",
+    "type": "image/png"
+  }],
+  "background_color": "#333333",
+  "theme_color": "#333333",
+  "play_store_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8jLjTEJpSVldc5mrKfAlYqxhbETqVrUtbNKNNPo0Y/236CWm7aDebQsNjW+TmwNxWDN1ZfZgwdZyJ3SSSJ2TDo+FrF2TaZs5ZEskz/pclx9lnZhkmmHAkzVBklATQz89pHHGzpTcoibLSC8fM2cV4WgZQ6jajxRRMhdtUUx7D+rD/JbIhzgZNN1DlqyucCixyPNSGJmbbOeJVCuGtX4U6/gyULCvb4vVUl721D19RhG76QzuMMkmTTZdRiKj15OgJNZtWkEH18yq8SC3bDejE+pN0472aWyVNwlDMx1YKPScCpt044keXGDBSTsbxbDv2EUKNjdTiFRW/NcJZEPPwIDAQAB"
+}

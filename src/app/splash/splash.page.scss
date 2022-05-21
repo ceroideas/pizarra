@@ -1,0 +1,14 @@
+ion-content {
+	--background: #222;
+
+	img {
+		position: absolute;
+		margin: auto;
+		width: 30%;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		max-width: 400px;
+	}
+}

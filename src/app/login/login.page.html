@@ -1,0 +1,48 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+	<div class="login">
+		<img src="assets/logo-f.svg" alt="">
+		<br>
+
+		<div class="input-box">
+			<div class="icon">
+				<ion-icon name="mail-outline"></ion-icon>
+			</div>
+
+			<div class="input">
+				<input type="email" [(ngModel)]="email" placeholder="E-mail">
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+
+		<div class="input-box">
+			<div class="icon">
+				<ion-icon name="lock-closed-outline"></ion-icon>
+			</div>
+
+			<div class="input">
+				<input type="password" [(ngModel)]="password" placeholder="Password">
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+
+		<label>
+			<input type="checkbox"> <span class="other-text dil">Mantener la sesión iniciada</span>
+		</label>
+
+		<button class="button-login" (click)="login()">
+			LOGIN
+		</button>
+
+		<span class="other-text">¿No recuerdas la contraseña? <span [routerLink]="['/recovery']" routerDirection="root">Recuperala Aquí</span></span>
+		<span class="other-text">¿No tienes cuenta? <span  [routerLink]="['/register']" routerDirection="root">Regístrate</span></span>
+
+	</div>
+
+</ion-content>

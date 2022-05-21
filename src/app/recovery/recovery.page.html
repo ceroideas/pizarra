@@ -1,0 +1,79 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+  <div class="login">
+    <img src="assets/logo-f.svg" alt="">
+    <br>
+
+    <div *ngIf="step == 1">
+      <div class="input-box">
+        <div class="icon">
+          <ion-icon name="mail-outline"></ion-icon>
+        </div>
+
+        <div class="input">
+          <input type="email" [(ngModel)]="email" placeholder="E-mail">
+        </div>
+        <div style="clear: both;"></div>
+      </div>
+
+      <button class="button-login" (click)="sendCode()">
+        ENVIAR CÓDIGO DE RECUPERACIÓN
+      </button>
+    </div>
+
+    <div *ngIf="step == 2">
+      <div class="input-box">
+        <div class="icon">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+        </div>
+
+        <div class="input">
+          <input type="number" [(ngModel)]="code" placeholder="Código de recuperación">
+        </div>
+        <div style="clear: both;"></div>
+      </div>
+
+      <button class="button-login" (click)="checkCode()">
+        COMPROBAR CÓDIGO
+      </button>
+    </div>
+
+    <div *ngIf="step == 3">
+      <div class="input-box">
+        <div class="icon">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+        </div>
+
+        <div class="input">
+          <input type="password" [(ngModel)]="password" placeholder="Contraseña">
+        </div>
+        <div style="clear: both;"></div>
+      </div>
+
+      <div class="input-box">
+        <div class="icon">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+        </div>
+
+        <div class="input">
+          <input type="password" [(ngModel)]="repeat_password" placeholder="Repetir Contraseña">
+        </div>
+        <div style="clear: both;"></div>
+      </div>
+
+      <button class="button-login" (click)="changePassword()">
+        CAMBIAR CONTRASEÑA
+      </button>
+    </div>
+
+    <span class="other-text">¿Ya tienes cuenta? <span  [routerLink]="['/login']" routerDirection="root">Inicia sesión</span></span>
+
+  </div>
+
+</ion-content>

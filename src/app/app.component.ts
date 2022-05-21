@@ -3,11 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { ApiService } from './services/api.service';
+import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
+  providers: [AndroidFullScreen]
 })
 export class AppComponent implements OnInit {
   public selectedIndex = 0;
@@ -48,7 +51,9 @@ export class AppComponent implements OnInit {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private api: ApiService,
+    private androidFullScreen: AndroidFullScreen
   ) {
     this.initializeApp();
   }
@@ -57,7 +62,23 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      //
+      this.androidFullScreen.isImmersiveModeSupported()
+      .then(() => {
+        console.log('Immersive mode supported');
+        this.androidFullScreen.immersiveMode().then(() => {
+          console.log('Immersive mode activated');
+        })
+      })
+      .catch(err => console.log(err));
+
+      this.api.startStore();
+      setTimeout(()=>{
+        this.api.checkSuscripcion();
+      },1000);
+
     });
+
   }
 
   ngOnInit() {

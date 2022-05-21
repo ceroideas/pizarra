@@ -1,5 +1,7 @@
 {
   "name": "pizarra",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

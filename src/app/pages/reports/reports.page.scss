@@ -1,0 +1,242 @@
+ion-content {
+	--background: transparent;
+}
+ion-page {
+	top: -15% !important;
+}
+
+#outer-modal {
+  clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+  background-color: #222;
+  height: calc(100% - 50px);
+  width: 100%;
+  margin: auto;
+  position: relative;
+  min-height: 500px;
+  &:before {
+    content: "";
+    clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+    background-image: url(../../../assets/cesped.jpg);
+    background-size: cover;
+    background-position: center;
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    margin: auto;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+  }
+
+  /**/
+
+  #inner-modal {
+  	padding: 16px 32px;
+  	overflow: auto;
+    clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+    background-color: #222;
+    height: 95%;
+    width: 96.5%;
+    margin: auto;
+    position: relative;
+    top: 2.5%;
+    &:before {
+      content: "";
+      clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+      background-color: #222;
+      height: calc(100% - 4px);
+      width: calc(100% - 4px);
+      margin: auto;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+    }
+
+  }
+}
+
+#modal-header {
+    content: "";
+    width: 40%;
+    // height: 20px;
+    text-align: center;
+    background-color: #222;
+    padding: 6px;
+    // top: -28px;
+    position: relative;
+    margin: auto;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
+
+#inner-information {
+	font-size: 12px;
+	line-height: 1.5;
+	text-align: justify;
+	position: relative;
+	z-index: 9999;
+}
+
+[name="terreno"] {
+  display: none;
+}
+
+[name="terreno"] + span {
+  padding: 8px;
+  border-bottom: 2px solid transparent;
+}
+
+[name="terreno"]:checked + span {
+  border-bottom: 2px solid #fff;
+}
+
+#search-doc {
+  width: 90%;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin: auto;
+  margin-bottom: 20px;
+
+
+  ion-icon {
+    width: 10%;
+    font-size: 24px;
+    position: relative;
+    top: 4px;
+  }
+
+  input {
+    width: 90%;
+    font-size: 24px;
+    border: none;
+    outline: none !important;
+    background: transparent;
+  }
+}
+
+.preselect {
+  display: block;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  box-shadow: 0 0 2px #333;
+  background-color: #ccc;
+  background-size: cover;
+  background-position: center;
+}
+
+.team-logo {
+  margin: auto;
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  box-shadow: 0 0 2px #333;
+  background-color: #ccc;
+  background-size: cover;
+  background-position: center;
+}
+
+.reconfigure {
+  display: block;
+  padding: 16px 0
+}
+
+.selectedTeam {
+  background-color: #3a3a3a;
+}
+
+.teamImage
+{
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+  background-size: cover;
+  background-position: center;
+  float: left;
+
+}
+.teamName
+{
+  width: calc(100% - 100px);
+  font-size: 18px;
+  font-weight: bold;
+  float: left;
+  padding-left: 20px;
+  margin-top: 25px;
+}
+
+.colors {
+  width: 33.33%;
+  text-align: center;
+  float: left;
+  font-size: 8px;
+  .color {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    margin: auto;
+    margin-bottom: 10px;
+    &.number {
+      color: #fff;
+      font-weight: bolder;
+      font-size: 24px;
+      text-align: center;
+      padding: 3px 0;
+      -webkit-text-stroke: 1px black;
+    }
+  }
+  &:after {
+    content:"";
+    display: block;
+    clear: both;
+  }
+}
+
+.to-mid {
+  position: relative;
+  display: block;
+  top: 18px;
+}
+
+.form-control {
+  width: 100%;
+  height: 28px;
+  position: relative;
+  top: -6px;
+}
+
+.pr {
+  display: block;
+  // left: unset !important;
+  // right: -140px !important;
+}
+
+.punctuations {
+  display: none;
+  &+label {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    background-color: #333;
+    width: 36px;
+    display: block;
+    text-align: center;
+  }
+  &:checked + label {
+    background-color: #070;
+    color: #fff;
+  }
+}
+
+.selectedStyle {
+  box-shadow: 0 0 0 2px gold;
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block !important;
+}

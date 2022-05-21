@@ -1,0 +1,12 @@
+svg {
+    /*touch-action: none;
+    pointer-events: none;*/
+    height: 100px;
+}
+
+* {
+	background-color: transparent !important;
+	background: transparent !important;
+	--background: transparent !important;
+	--background-color: transparent !important;
+}

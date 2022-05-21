@@ -1,0 +1,400 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>information</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+  <div id="modal-header">
+    Reporte
+  </div>
+
+  <div id="outer-modal">
+    <div id="inner-modal">
+
+      <div id="inner-information">
+
+        <div *ngIf="step == 1">
+
+          <ion-row>
+            <ion-col size="12">
+              <label class="modal-label">
+                {{proyect.team1.name}} <span style="float: right">1/5</span>
+              </label>
+            </ion-col>
+            <ion-col size="6">
+              <label class="modal-label">
+                Observaciones Defensivas
+              </label>
+
+              <textarea [(ngModel)]="defensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Observaciones Ofensivas
+              </label>
+
+              <textarea [(ngModel)]="ofensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Fortalezas
+              </label>
+
+              <textarea [(ngModel)]="strengths_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Debilidades
+              </label>
+
+              <textarea [(ngModel)]="weakness_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+          </ion-row>
+
+          <ion-col size="6">
+              <label class="modal-label">
+                Otro
+              </label>
+
+              <textarea [(ngModel)]="other_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="pdfReport()">
+                    PDF
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 2">
+                    Siguiente
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="modal.dismiss()">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+        <div *ngIf="step == 2">
+
+          <ion-row>
+            <ion-col size="12">
+              <label class="modal-label">
+                {{proyect.team2.name}} <span style="float: right">2/5</span>
+              </label>
+            </ion-col>
+            <ion-col size="6">
+              <label class="modal-label">
+                Observaciones Defensivas
+              </label>
+
+              <textarea [(ngModel)]="defensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Observaciones Ofensivas
+              </label>
+
+              <textarea [(ngModel)]="ofensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Fortalezas
+              </label>
+
+              <textarea [(ngModel)]="strengths_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Debilidades
+              </label>
+
+              <textarea [(ngModel)]="weakness_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+          </ion-row>
+
+          <ion-col size="6">
+              <label class="modal-label">
+                Otro
+              </label>
+
+              <textarea [(ngModel)]="other_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+            </ion-col>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 1">
+                    Anterior
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 3">
+                    Siguiente
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="modal.dismiss()">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+        <div class="hidden" [ngClass]="{'show':step == 3}">
+
+          <div style="min-height: 375px; overflow: auto;">
+            <ion-row>
+              <ion-col size="12">
+                <label class="modal-label">
+                  {{proyect.team1.name}} - Evaluación de jugadores <span style="float: right">3/5</span>
+                </label>
+              </ion-col>
+              
+              <ion-col size="6" *ngFor="let p of players_1">
+                <ion-row>
+                  <ion-col size="12">
+                    <label class="modal-label">
+                      {{p.name}} - {{p.number}}
+                    </label>
+                  </ion-col>
+
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-0'" [checked]="p | players:report:0" class="punctuations" [name]="'pl-'+p.id" value="0">
+                    <label [for]="'pl-'+p.id+'-0'">x</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-1'" [checked]="p | players:report:1" class="punctuations" [name]="'pl-'+p.id" value="1">
+                    <label [for]="'pl-'+p.id+'-1'">1</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-2'" [checked]="p | players:report:2" class="punctuations" [name]="'pl-'+p.id" value="2">
+                    <label [for]="'pl-'+p.id+'-2'">2</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-3'" [checked]="p | players:report:3" class="punctuations" [name]="'pl-'+p.id" value="3">
+                    <label [for]="'pl-'+p.id+'-3'">3</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-4'" [checked]="p | players:report:4" class="punctuations" [name]="'pl-'+p.id" value="4">
+                    <label [for]="'pl-'+p.id+'-4'">4</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-5'" [checked]="p | players:report:5" class="punctuations" [name]="'pl-'+p.id" value="5">
+                    <label [for]="'pl-'+p.id+'-5'">5</label>
+                  </ion-col>
+                </ion-row>
+                <div class="separator"></div>
+              </ion-col>
+            </ion-row>
+          </div>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 2">
+                    Anterior
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 4">
+                    Siguiente
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="modal.dismiss()">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+        <div class="hidden" [ngClass]="{'show':step == 4}">
+
+          <div style="min-height: 375px; overflow: auto;">
+            <ion-row>
+              <ion-col size="12">
+                <label class="modal-label">
+                  {{proyect.team2.name}} - Evaluación de jugadores <span style="float: right">4/5</span>
+                </label>
+              </ion-col>
+              
+              <ion-col size="6" *ngFor="let p of players_2">
+                <ion-row>
+                  <ion-col size="12">
+                    <label class="modal-label">
+                      {{p.name}}
+                    </label>
+                  </ion-col>
+
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-0'" [checked]="p | players:report:0" class="punctuations" [name]="'pl-'+p.id" value="0">
+                    <label [for]="'pl-'+p.id+'-0'">x</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-1'" [checked]="p | players:report:1" class="punctuations" [name]="'pl-'+p.id" value="1">
+                    <label [for]="'pl-'+p.id+'-1'">1</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-2'" [checked]="p | players:report:2" class="punctuations" [name]="'pl-'+p.id" value="2">
+                    <label [for]="'pl-'+p.id+'-2'">2</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-3'" [checked]="p | players:report:3" class="punctuations" [name]="'pl-'+p.id" value="3">
+                    <label [for]="'pl-'+p.id+'-3'">3</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-4'" [checked]="p | players:report:4" class="punctuations" [name]="'pl-'+p.id" value="4">
+                    <label [for]="'pl-'+p.id+'-4'">4</label>
+                  </ion-col>
+                  <ion-col size="2">
+                    <input type="radio" [id]="'pl-'+p.id+'-5'" [checked]="p | players:report:5" class="punctuations" [name]="'pl-'+p.id" value="5">
+                    <label [for]="'pl-'+p.id+'-5'">5</label>
+                  </ion-col>
+                </ion-row>
+                <div class="separator"></div>
+              </ion-col>
+            </ion-row>
+          </div>
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 3">
+                    Anterior
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 5">
+                    Siguiente
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="modal.dismiss()">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+        <div *ngIf="step == 5">
+
+          <div style="min-height: 375px; overflow: auto;">
+            <ion-row>
+              <ion-col size="12">
+                <label class="modal-label">
+                  Anexo <span style="float: right">5/5</span>
+                </label>
+              </ion-col>
+
+              <ion-col size="12">
+                <label class="modal-label">
+                  Observaciones del arbitro
+                </label>
+
+                <textarea [(ngModel)]="referee" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+              </ion-col>
+
+              <ion-col size="12">
+                <label class="modal-label">
+                  Conclusiones
+                </label>
+
+                <textarea [(ngModel)]="conclusion" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+              </ion-col>
+            </ion-row>
+          </div>
+
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="step = 4">
+                    Anterior
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col size="6">
+                  <button class="modal-button" (click)="saveReport()">
+                    Aceptar
+                  </button>
+                </ion-col>
+
+                <ion-col size="6">
+                  <button class="modal-button danger" (click)="modal.dismiss()">
+                    Cancelar
+                  </button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+          </ion-row>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,54 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>information</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+  <div id="modal-header">
+    Abrir Ejercicio
+  </div>
+  <div id="outer-modal">
+    <div id="inner-modal">
+
+      <div id="inner-information">
+
+        <ion-row>
+          <ion-col size="12">
+            <div id="search-doc">
+              <ion-icon name="search"></ion-icon>
+              <input type="text" [(ngModel)]="query">
+              <div style="clear: both;"></div>
+            </div>    
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+          <ion-col size="3" style="text-align: center;" *ngFor="let p of projects | search:query; let i = index" (click)="selectedDoc = i; openDoc(p)">
+
+            <div style="padding: 8px; margin-bottom: 20px;" [ngClass]="{'selectedDoc':selectedDoc == i}">
+
+              <span style="position: absolute; right: 3px; top: 1px;">
+                <ion-button slot="icon-only" color="danger" size="small" (click)="delete(p.id)">
+                  <ion-icon name="trash"></ion-icon>
+                </ion-button>
+              </span>
+              
+              <img src="assets/icono-documento.svg" alt="" style="width: 40%;">
+
+              <div style="position: relative; top: 8px; text-align: center;">
+                {{p.name}}<br>
+
+                <small>{{p.created_at | date:'dd-MM-yyyy HH:mm'}}</small>
+              </div>
+
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

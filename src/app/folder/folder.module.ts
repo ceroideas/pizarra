@@ -8,12 +8,15 @@ import { FolderPageRoutingModule } from './folder-routing.module';
 
 import { FolderPage } from './folder.page';
 
+import { IonicContextMenuModule } from 'ionic-context-menu';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FolderPageRoutingModule
+    FolderPageRoutingModule,
+    IonicContextMenuModule
   ],
   declarations: [FolderPage]
 })

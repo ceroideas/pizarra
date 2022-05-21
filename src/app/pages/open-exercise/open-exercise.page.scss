@@ -1,0 +1,106 @@
+ion-content {
+	--background: transparent;
+}
+ion-page {
+	top: -15% !important;
+}
+
+#outer-modal {
+  clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+  background-color: #222;
+  height: calc(100% - 50px);
+  width: 100%;
+  margin: auto;
+  position: relative;
+  min-height: 500px;
+  &:before {
+    content: "";
+    clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+    background-image: url(../../../assets/cesped.jpg);
+    background-size: cover;
+    background-position: center;
+    height: calc(100% - 4px);
+    width: calc(100% - 4px);
+    margin: auto;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+  }
+
+  /**/
+
+  #inner-modal {
+  	padding: 16px 32px;
+  	overflow: auto;
+    clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+    background-color: #222;
+    height: 95%;
+    width: 96.5%;
+    margin: auto;
+    position: relative;
+    top: 2.5%;
+    &:before {
+      content: "";
+      clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
+      background-color: #222;
+      height: calc(100% - 4px);
+      width: calc(100% - 4px);
+      margin: auto;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+    }
+
+  }
+}
+
+#modal-header {
+    content: "";
+    width: 40%;
+    // height: 20px;
+    text-align: center;
+    background-color: #222;
+    padding: 6px;
+    // top: -28px;
+    position: relative;
+    margin: auto;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
+
+#inner-information {
+	font-size: 12px;
+	line-height: 1.5;
+	text-align: justify;
+	position: relative;
+	z-index: 9999;
+}
+
+#search-doc {
+  width: 90%;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin: auto;
+  margin-bottom: 20px;
+
+
+  ion-icon {
+    width: 10%;
+    font-size: 24px;
+    position: relative;
+    top: 4px;
+  }
+
+  input {
+    width: 90%;
+    font-size: 24px;
+    border: none;
+    outline: none !important;
+    background: transparent;
+  }
+}
+
+.selectedDoc {
+  box-shadow: inset 0 0 0 2px #fff;
+  border-radius: 4px;
+}
