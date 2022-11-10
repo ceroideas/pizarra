@@ -15,9 +15,10 @@ declare var moment:any
 export class ApiService {
 
   // url = 'http://127.0.0.1:8000/api';
-  url = 'https://afecfa.es/backend/public/api';
-  baseUrl = 'https://afecfa.es/backend/public';
-  basePath = '/var/www/vhosts/afecfa.es/httpdocs/backend/public';
+  // baseUrl = 'http://127.0.0.1:8000';
+  url = 'https://api.afecfa.es/api';
+  baseUrl = 'https://api.afecfa.es';
+  basePath = '/var/www/vhosts/afecfa.es/api.afecfa.es/public';
   vPro = false;
   isIOS;
   desktop;
@@ -32,7 +33,7 @@ export class ApiService {
     if (this.plt.is('desktop')) {
       this.vPro = true;
     }else{
-      this.vPro = false;
+      this.vPro = true;
     }
 
   }
@@ -100,6 +101,16 @@ export class ApiService {
     return this.http.get(this.url+'/getExercises/'+id);
   }
 
+  loadSessionScenes(id)
+  {
+    return this.http.get(this.url+'/loadSessionScenes/'+id);
+  }
+
+  loadScenes(id)
+  {
+    return this.http.get(this.url+'/loadScenes/'+id);
+  }
+
   getTeams(id)
   {
   	return this.http.get(this.url+'/getTeams/'+id);
@@ -108,6 +119,10 @@ export class ApiService {
   getPlayers(id)
   {
   	return this.http.get(this.url+'/getPlayers/'+id);
+  }
+  getMyPlayers(id)
+  {
+    return this.http.get(this.url+'/getMyPlayers/'+id);
   }
 
   getRosters(id)
@@ -122,6 +137,10 @@ export class ApiService {
   upProject(data)
   {
   	return this.http.post(this.url+'/upProject',data);
+  }
+  upProject1(data)
+  {
+    return this.http.post(this.url+'/upProject1',data);
   }
 
   upScene(data)
@@ -217,6 +236,11 @@ export class ApiService {
   }
 
 
+  getDates(id){
+    return this.http.get(this.url+'/getDates/'+id);
+  }
+
+
 
 
 
@@ -271,11 +295,23 @@ export class ApiService {
   saveLog(data){
     return this.http.post(this.url+'/saveLog',data);
   }
+  downloadScene(data){
+    return this.http.post(this.url+'/downloadScene',data);
+  }
 
   downloadFile(url, name = 'pdf-name')
   {
     var link = document.createElement('a');
         link.download = name+'.pdf';
+        link.href = url;
+        link.target = '_blank';
+        link.click();
+  }
+
+  downloadImage(url, name = 'pdf-name')
+  {
+    var link = document.createElement('a');
+        link.download = name+'.jpg';
         link.href = url;
         link.target = '_blank';
         link.click();
@@ -360,8 +396,8 @@ export class ApiService {
 
       });
 
-      this.store.when("afecpro").approved((product: IAPProduct) => {
-        console.log('approved')
+      this.store.when("afecpro").verified((product: IAPProduct) => {
+        console.log('verified');
         // if (localStorage.getItem('AFECuser')) {
           this.vPro = true;
           this.addYearSubscription().subscribe(data=>{
@@ -373,6 +409,24 @@ export class ApiService {
               this.showApproved();
             }
           });
+          // product.finish();
+        // }
+      });
+
+      this.store.when("afecpro").approved((product: IAPProduct) => {
+        console.log('approved')
+        product.verify();
+        // if (localStorage.getItem('AFECuser')) {
+          /*this.vPro = true;
+          this.addYearSubscription().subscribe(data=>{
+            this.buyModal.dismiss();
+            console.log('comprado');
+            localStorage.setItem('AFECuser',JSON.stringify(data));
+            if (!localStorage.getItem('aprovado')) {
+              localStorage.setItem('aprovado','1');
+              this.showApproved();
+            }
+          });*/
           // product.finish();
         // }
       });

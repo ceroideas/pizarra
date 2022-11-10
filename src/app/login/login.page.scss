@@ -1,12 +1,21 @@
+app-login {
+	--background: #fff !important;
+	background-color: #fff !important;
+}
 ion-content {
-	--background: #222;
+	// --background: #3498db;
+	background-image: url('../../assets/fondo.svg');
+    background-size: 100% 200px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    --background: transparent;
 }
 
 .login {
 	img {
 		position: relative;
 		margin: 10% auto;
-		width: 25%;
+		width: 40%;
 		top: 0;
 		left: 0;
 		right: 0;
@@ -61,7 +70,8 @@ ion-content {
 	margin:18px 10%;
 	display: block;
 	font-size: 14px;
+	cursor: pointer;
 	span {
-		color: #27d8a1;
+		color: #3498db;
 	} 
 }

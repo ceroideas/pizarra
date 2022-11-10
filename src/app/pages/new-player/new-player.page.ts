@@ -3,6 +3,8 @@ import { ModalController, AlertController, LoadingController } from '@ionic/angu
 import { ApiService } from '../../services/api.service';
 import { EventsService } from '../../services/events.service';
 
+declare var moment:any;
+
 @Component({
   selector: 'app-new-player',
   templateUrl: './new-player.page.html',
@@ -32,10 +34,18 @@ export class NewPlayerPage implements OnInit {
   player_name;
   player_number;
   player_age;
+  player_bday;
+  player_sex;
   player_weight;
   player_height;
   player_titular;
   player_position;
+  player_position_2;
+
+  player_phone;
+  player_email;
+  player_side;
+
   player_notes;
 
   selectTN;
@@ -119,6 +129,8 @@ export class NewPlayerPage implements OnInit {
 
   savePlayer()
   {
+    this.player_age = moment().diff(this.player_bday,'years');
+
     this.loadingCtrl.create().then(a=>{
 
       a.present();
@@ -130,10 +142,23 @@ export class NewPlayerPage implements OnInit {
           name:this.player_name,
           number:this.player_number,
           age:this.player_age,
+
+          sex: this.player_sex,
+          bday: this.player_bday,
+
           weight:this.player_weight,
           height:this.player_height,
+
           position:this.player_position,
+          position_2:this.player_position_2,
+
           titular:this.player_titular,
+
+          phone: this.player_phone,
+          email: this.player_email,
+
+          side: this.player_side,
+
           notes:this.player_notes
 
         }).subscribe((data:any)=>{
@@ -150,6 +175,12 @@ export class NewPlayerPage implements OnInit {
         this.player_titular = null;
         this.player_position = null;
         this.player_notes = null;
+
+        this.player_sex = null;
+        this.player_bday = null;
+        this.player_position_2 = null;
+        this.player_phone = null;
+        this.player_email = null;
         //**//
       },err=>{
         a.dismiss();
@@ -191,15 +222,16 @@ export class NewPlayerPage implements OnInit {
 
       let elem = e.srcElement.parentNode.parentNode.parentNode;
 
-      elem.children.item(1).children.item(0).children.item(0).value = p.number;
-      elem.children.item(2).children.item(0).children.item(0).value = p.position;
-      elem.children.item(3).children.item(0).children.item(0).checked = p.titular == 1;
+      elem.children.item(3).children.item(0).children.item(0).value = p.number;
+      elem.children.item(4).children.item(0).children.item(0).value = p.position;
+      elem.children.item(5).children.item(0).children.item(0).value = p.position_2;
 
       this.api.upRosterPlayer({
         id:r.id,
         player_id:p.id,
         number:p.number,
         position:p.position,
+        position_2:p.position_2,
         titular:p.titular
       }).subscribe((data:any)=>{
         this.rosters = data;

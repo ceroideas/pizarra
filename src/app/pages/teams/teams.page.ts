@@ -3,6 +3,8 @@ import { ModalController, AlertController, LoadingController } from '@ionic/angu
 import { ApiService } from '../../services/api.service';
 import { EventsService } from '../../services/events.service';
 
+declare var moment:any;
+
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.page.html',
@@ -26,12 +28,19 @@ export class TeamsPage implements OnInit {
   player_image;
   player_name;
   player_number;
+  player_position;
   player_age;
   player_weight;
   player_height;
   player_titular;
-  player_position;
   player_notes;
+  player_sex;
+  player_bday;
+  player_position_2;
+  player_phone;
+  player_email;
+  player_side;
+
 
   selectedTeam = null;
 
@@ -45,6 +54,7 @@ export class TeamsPage implements OnInit {
   selectT2M;
   selectT2B;
 
+  query;
   query1;
   query2;
 
@@ -184,6 +194,8 @@ export class TeamsPage implements OnInit {
 
   savePlayer()
   {
+    this.player_age = moment().diff(this.player_bday,'years');
+
     this.loadingCtrl.create().then(a=>{
 
       a.present();
@@ -191,18 +203,34 @@ export class TeamsPage implements OnInit {
         {
           user_id:this.user.id,
           team_id:this.team,
+
           image:this.player_image,
           name:this.player_name,
           number:this.player_number,
           age:this.player_age,
+
+          sex: this.player_sex,
+          bday: this.player_bday,
+
           weight:this.player_weight,
           height:this.player_height,
+
           position:this.player_position,
+          position_2:this.player_position_2,
+
           titular:this.player_titular,
+
+          phone: this.player_phone,
+          email: this.player_email,
+          side: this.player_side,
+
           notes:this.player_notes
 
         }).subscribe((data:any)=>{
         a.dismiss();
+
+        this.getRosters(this.team);
+        
         this.step = 5;
         this.players = data;
         //**//
@@ -215,6 +243,13 @@ export class TeamsPage implements OnInit {
         this.player_titular = null;
         this.player_position = null;
         this.player_notes = null;
+
+        this.player_sex = null;
+        this.player_bday = null;
+        this.player_position_2 = null;
+        this.player_phone = null;
+        this.player_email = null;
+        this.player_side = null;
         //**//
       },err=>{
         a.dismiss();
@@ -233,15 +268,19 @@ export class TeamsPage implements OnInit {
 
       let elem = e.srcElement.parentNode.parentNode.parentNode;
 
-      elem.children.item(1).children.item(0).children.item(0).value = p.number;
-      elem.children.item(2).children.item(0).children.item(0).value = p.position;
-      elem.children.item(3).children.item(0).children.item(0).checked = p.titular == 1;
+      console.log(elem.children);
+
+      elem.children.item(3).children.item(0).children.item(0).value = p.number;
+      elem.children.item(4).children.item(0).children.item(0).value = p.position;
+      elem.children.item(5).children.item(0).children.item(0).value = p.position_2;
+      // elem.children.item(3).children.item(0).children.item(0).checked = p.titular == 1;
 
       this.api.upRosterPlayer({
         id:r.id,
         player_id:p.id,
         number:p.number,
         position:p.position,
+        position_2:p.position_2,
         titular:p.titular
       }).subscribe((data:any)=>{
         this.rosters = data;
@@ -257,13 +296,15 @@ export class TeamsPage implements OnInit {
       let p = this.players.find(x=>x.id == r.player_id);
       p.number = (document.querySelector('.numbers[data-id="'+r.id+'"]') as any).value ;
       p.position = (document.querySelector('.positions[data-id="'+r.id+'"]') as any).value;
-      p.titular = (document.querySelector('.positions[data-id="'+r.id+'"]') as any).checked;
+      p.position_2 = (document.querySelector('.positions_2[data-id="'+r.id+'"]') as any).value;
+      // p.titular = (document.querySelector('.positions[data-id="'+r.id+'"]') as any).checked;
 
       this.api.upRosterPlayer({
         id:r.id,
         player_id:p.id,
         number:p.number,
         position:p.position,
+        position_2:p.position_2,
         titular:p.titular
       }).subscribe((data:any)=>{
         this.rosters = data;

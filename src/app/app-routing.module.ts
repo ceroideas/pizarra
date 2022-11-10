@@ -78,6 +78,14 @@ const routes: Routes = [
   {
     path: 'recovery',
     loadChildren: () => import('./recovery/recovery.module').then( m => m.RecoveryPageModule)
+  },
+  {
+    path: 'calendar',
+    loadChildren: () => import('./pages/calendar/calendar.module').then( m => m.CalendarPageModule)
+  },
+  {
+    path: 'edit-proyect',
+    loadChildren: () => import('./pages/edit-proyect/edit-proyect.module').then( m => m.EditProyectPageModule)
   }
 ];
 

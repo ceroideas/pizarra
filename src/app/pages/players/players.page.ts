@@ -3,6 +3,8 @@ import { ModalController,LoadingController, AlertController } from '@ionic/angul
 import { ApiService } from '../../services/api.service';
 import { EventsService } from '../../services/events.service';
 
+declare var moment:any;
+
 @Component({
   selector: 'app-players',
   templateUrl: './players.page.html',
@@ -17,6 +19,7 @@ export class PlayersPage implements OnInit {
 
   query;
   query1;
+  equipo;
 
   user = JSON.parse(localStorage.getItem('AFECuser'));
 
@@ -33,22 +36,39 @@ export class PlayersPage implements OnInit {
   player_height;
   player_titular;
   player_notes;
+  player_sex;
+  player_bday;
+  player_position_2;
+  player_phone;
+  player_email;
+  player_side;
 
   report_type;
   report_name;
-  report_skills;
+  report_date;
+  // report_skills;
+  // report_technical;
   report_psychological;
-  report_technical;
+  report_tec_ind_off;
+  report_tec_ind_def;
+  report_tac_asp_off;
+  report_tac_asp_def;
   report_condition;
   report_speed;
   report_conclusion;
 
   reports:any = [];
 
+  teams:any = [];
+
   constructor(public modal: ModalController, public api: ApiService, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public events: EventsService) { }
 
   ngOnInit() {
     this.getAllPlayers();
+
+    this.api.getTeams(this.user.id).subscribe((data:any)=>{
+      this.teams = data;
+    })
   }
 
   getAllPlayers()
@@ -83,6 +103,13 @@ export class PlayersPage implements OnInit {
               this.player_titular = p.titular;
               this.player_notes = p.notes;
 
+              this.player_sex = p.sex;
+              this.player_bday = p.bday;
+              this.player_position_2 = p.position_2;
+              this.player_phone = p.phone;
+              this.player_email = p.email;
+              this.player_side = p.side;
+
               this.api.getReports(p.id).subscribe(data=>{
                 this.reports = data;
               })
@@ -113,6 +140,8 @@ export class PlayersPage implements OnInit {
 
   savePlayer()
   {
+    this.player_age = moment().diff(this.player_bday,'years');
+
     this.loadingCtrl.create().then(a=>{
 
       a.present();
@@ -124,10 +153,22 @@ export class PlayersPage implements OnInit {
           name:this.player_name,
           number:this.player_number,
           age:this.player_age,
+
+          sex: this.player_sex,
+          bday: this.player_bday,
+
           weight:this.player_weight,
           height:this.player_height,
+
           position:this.player_position,
+          position_2:this.player_position_2,
+
           titular:this.player_titular,
+
+          phone: this.player_phone,
+          email: this.player_email,
+          side: this.player_side,
+
           notes:this.player_notes
 
         }).subscribe((data:any)=>{
@@ -151,11 +192,17 @@ export class PlayersPage implements OnInit {
   {
     this.loadingCtrl.create().then(a=>{
 
-      this.report_skills = (document.querySelector('[name="skills"]:checked') as any).value;
+      // this.report_skills = (document.querySelector('[name="skills"]:checked') as any).value;
+      // this.report_technical = (document.querySelector('[name="technical"]:checked') as any).value;
+
       this.report_psychological = (document.querySelector('[name="psychological"]:checked') as any).value;
-      this.report_technical = (document.querySelector('[name="technical"]:checked') as any).value;
+      this.report_tec_ind_off = (document.querySelector('[name="tec_ind_off"]:checked') as any).value;
+      this.report_tec_ind_def = (document.querySelector('[name="tec_ind_def"]:checked') as any).value;
+      this.report_tac_asp_off = (document.querySelector('[name="tac_asp_off"]:checked') as any).value;
+      this.report_tac_asp_def = (document.querySelector('[name="tac_asp_def"]:checked') as any).value;
       this.report_condition = (document.querySelector('[name="condition"]:checked') as any).value;
-      this.report_speed = (document.querySelector('[name="speed"]:checked') as any).value;
+      // this.report_speed = (document.querySelector('[name="speed"]:checked') as any).value;
+
 
       a.present();
       this.api.saveReport(
@@ -163,11 +210,14 @@ export class PlayersPage implements OnInit {
           player_id:this.player.id,
           type:this.report_type,
           name:this.report_name,
-          skills:this.report_skills,
+          date:this.report_date,
           psychological:this.report_psychological,
-          technical:this.report_technical,
+          tec_ind_off:this.report_tec_ind_off,
+          tec_ind_def:this.report_tec_ind_def,
+          tac_asp_off:this.report_tac_asp_off,
+          tac_asp_def:this.report_tac_asp_def,
           condition:this.report_condition,
-          speed:this.report_speed,
+          // speed:this.report_speed,
           conclusion:this.report_conclusion,
 
         }).subscribe((data:any)=>{

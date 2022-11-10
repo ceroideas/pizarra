@@ -60,3 +60,14 @@
     margin-top: 0px !important;
   }
 }
+
+
+/* #container > *, */ #bottom-menu , #bottom-menu > * {
+  transform: scale(0.85);
+}
+
+#bottom-menu {
+  width: 120% !important;
+  margin-left: -10%;
+  bottom: -10px !important;
+}

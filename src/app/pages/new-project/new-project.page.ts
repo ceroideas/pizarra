@@ -37,6 +37,12 @@ export class NewProjectPage implements OnInit {
   player_titular;
   player_position;
   player_notes;
+  player_sex;
+  player_bday;
+  player_position_2;
+  player_phone;
+  player_email;
+  player_side;
 
   selectedTeam = null;
 
@@ -50,6 +56,7 @@ export class NewProjectPage implements OnInit {
   selectT2M;
   selectT2B;
 
+  query;
   query1;
   query2;
 
@@ -70,6 +77,8 @@ export class NewProjectPage implements OnInit {
   attendances;
   periods;
   minutes = 45;
+  competition;
+  jornada;
 
   players_selected = [];
 
@@ -190,7 +199,14 @@ export class NewProjectPage implements OnInit {
           height:this.player_height,
           position:this.player_position,
           titular:this.player_titular,
-          notes:this.player_notes
+          notes:this.player_notes,
+
+          sex:this.player_sex,
+          bday:this.player_bday,
+          position_2:this.player_position_2,
+          phone:this.player_phone,
+          email:this.player_email,
+          side:this.player_side,
 
         }).subscribe((data:any)=>{
         a.dismiss();
@@ -206,6 +222,13 @@ export class NewProjectPage implements OnInit {
         this.player_titular = null;
         this.player_position = null;
         this.player_notes = null;
+
+        this.player_sex = null;
+        this.player_bday = null;
+        this.player_position_2 = null;
+        this.player_phone = null;
+        this.player_email = null;
+        this.player_side = null;
         //**//
       },err=>{
         a.dismiss();
@@ -250,13 +273,16 @@ export class NewProjectPage implements OnInit {
                 attendances:this.attendances,
                 periods:this.periods,
                 minutes:this.minutes,
+                competition:this.competition,
+                jornada:this.jornada,
 
                 styles:this.styles,
                 team1:this.team1.id,
                 team2:this.team2.id,
                 terrain:this.terreno,
                 user_id:this.user.id,
-                name:this.name
+                name:this.name,
+                isExercise: null,
               };
 
             console.log(data);
@@ -265,6 +291,7 @@ export class NewProjectPage implements OnInit {
               l.present()
               this.api.upProject(data).subscribe(data=>{
                 l.dismiss();
+                localStorage.removeItem('session');
                 localStorage.setItem('actualProject',JSON.stringify(data));
                 this.events.publish('loadProject');
                 this.modal.dismiss();

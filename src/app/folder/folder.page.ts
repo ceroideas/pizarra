@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ModalController, AlertController, ActionSheetController, LoadingController, NavController } from '@ionic/angular';
+import { ModalController, AlertController, ActionSheetController, LoadingController, NavController, ToastController, Platform } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { InformationPage } from '../pages/information/information.page';
 import { NewProjectPage } from '../pages/new-project/new-project.page';
@@ -8,12 +8,14 @@ import { NewPlayerPage } from '../pages/new-player/new-player.page';
 import { NewSessionPage } from '../pages/new-session/new-session.page';
 import { OpenProjectPage } from '../pages/open-project/open-project.page';
 import { OpenExercisePage } from '../pages/open-exercise/open-exercise.page';
+import { EditProyectPage } from '../pages/edit-proyect/edit-proyect.page';
 import { TerrainPage } from '../pages/terrain/terrain.page';
 import { TeamsPage } from '../pages/teams/teams.page';
 import { PlayersPage } from '../pages/players/players.page';
 
 import { PrEventsPage } from '../pages/pr-events/pr-events.page';
 import { ReportsPage } from '../pages/reports/reports.page';
+import { CalendarPage } from '../pages/calendar/calendar.page';
 
 import { EventsService } from '../services/events.service';
 import { ApiService } from '../services/api.service';
@@ -24,6 +26,7 @@ const interact = require('interactjs')
 declare var RecordRTC:any;
 
 declare var $:any;
+declare var window:any;
 
 // declare var html2canvas;
 
@@ -41,8 +44,14 @@ export class FolderPage implements OnInit {
   // public folder: string;
   @ViewChild('campo', { static: false }) campo: ElementRef;
   @ViewChild('imageCanvas', { static: false }) canvas: any;
+  @ViewChild('elementtocopy', { static: false }) mainDiv: ElementRef;
 
   user = JSON.parse(localStorage.getItem('AFECuser'));
+
+  capturing = false;
+
+  expanded = null;
+  expanded1 = null;
 
   canvasElement: any;
   auxCanvasElement:any;
@@ -80,6 +89,9 @@ export class FolderPage implements OnInit {
   isRoster = false;
   isMainMenu = true;
 
+  selectColorText = false;
+  actualTextId;
+
   roster = [];
 
   terrain = localStorage.getItem('terrain') || 1;
@@ -99,27 +111,27 @@ export class FolderPage implements OnInit {
   showSession = false;
 
   articles = [
-  '/assets/assets/icono-balon-baloncesto.svg',
-  '/assets/assets/icono-balon-futbol.svg',
-  '/assets/assets/icono-balon-rugbi.svg',
-  '/assets/assets/icono-balon-tenis.svg',
-  '/assets/assets/icono-banderin-01.svg',
-  '/assets/assets/icono-banderin-02.svg',
-  '/assets/assets/icono-cama-elastica-01.svg',
-  '/assets/assets/icono-cama-elastica-02.svg',
-  '/assets/assets/icono-cono-grande.svg',
-  '/assets/assets/icono-cono-mini.svg',
-  '/assets/assets/icono-escalera-horizontal.svg',
-  '/assets/assets/icono-escalera-vertical.svg',
-  '/assets/assets/icono-maniqui.svg',
-  '/assets/assets/icono-porteria-01.svg',
-  '/assets/assets/icono-porteria-02.svg',
-  '/assets/assets/icono-porteria-03.svg',
-  '/assets/assets/icono-porteria-04.svg',
-  '/assets/assets/icono-porteria-05.svg',
-  '/assets/assets/icono-porteria-06.svg',
-  '/assets/assets/icono-porteria-09.svg',
-  '/assets/assets/icono-porteria-10.svg',
+  {image:'/assets/assets/icono-balon-baloncesto.svg', class: 'w25'},
+  {image:'/assets/assets/icono-balon-futbol.svg', class: 'w25'},
+  {image:'/assets/assets/icono-balon-rugbi.svg', class: 'w25'},
+  {image:'/assets/assets/icono-balon-tenis.svg', class: 'w25'},
+  {image:'/assets/assets/icono-banderin-01.svg', class: 'w60'},
+  {image:'/assets/assets/icono-banderin-02.svg', class: 'w60'},
+  {image:'/assets/assets/icono-cama-elastica-01.svg', class: ''},
+  {image:'/assets/assets/icono-cama-elastica-02.svg', class: 'w80'},
+  {image:'/assets/assets/icono-cono-grande.svg', class: 'w30'},
+  {image:'/assets/assets/icono-cono-mini.svg', class: 'w40'},
+  {image:'/assets/assets/icono-escalera-horizontal.svg', class: 'w80'},
+  {image:'/assets/assets/icono-escalera-vertical.svg', class: 'w80'},
+  {image:'/assets/assets/icono-maniqui.svg', class: 'w90'},
+  {image:'/assets/assets/icono-porteria-01.svg', class: 'w110'},
+  {image:'/assets/assets/icono-porteria-02.svg', class: 'w110'},
+  {image:'/assets/assets/icono-porteria-03.svg', class: 'w110'},
+  {image:'/assets/assets/icono-porteria-04.svg', class: 'w110'},
+  {image:'/assets/assets/icono-porteria-05.svg', class: 'w110'},
+  {image:'/assets/assets/icono-porteria-06.svg', class: 'w110'},
+  {image:'/assets/assets/icono-porteria-09.svg', class: 'w110'},
+  {image:'/assets/assets/icono-porteria-10.svg', class: 'w110'},
   ];
 
   module = 1;
@@ -131,12 +143,22 @@ export class FolderPage implements OnInit {
   exercises = [];
 
   bg;
+  session = localStorage.getItem('session') ? JSON.parse(localStorage.getItem('session')) : null;
 
-  constructor(public html2canvas: Html2canvasService, public api: ApiService, private loading: LoadingController, private activatedRoute: ActivatedRoute,
+  dpr = window.devicePixelRatio;
+
+  constructor(public html2canvas: Html2canvasService, public api: ApiService, private loading: LoadingController, public platform: Platform,
+    private toastCtrl: ToastController,
+    private activatedRoute: ActivatedRoute,
     public modal: ModalController, public alert: AlertController, public action: ActionSheetController, public events: EventsService, public nav: NavController) {
 
     this.bg = new Image();
     this.bg.src = 'assets/cesped.jpg';
+
+    // setInterval(()=>{
+    //   console.log('autosaving');
+    //   this.saveProject(true, false, null, null, null, false);
+    // },1000*120);
 
 
     this.events.destroy('changeTerrain');
@@ -161,6 +183,7 @@ export class FolderPage implements OnInit {
       let ex = localStorage.getItem('session');
 
       if (ex) {
+        this.session = JSON.parse(localStorage.getItem('session'));
         for (let i of JSON.parse(ex).pr){
           this.exercises.push(i.project);
         }
@@ -176,6 +199,21 @@ export class FolderPage implements OnInit {
         this.exercises.push(i.project);
       }
     }
+
+    this.session = JSON.parse(localStorage.getItem('session'));
+
+    console.log(this.session);
+  }
+
+  async editProject(project)
+  {
+    const modal = await this.modal.create({
+      component: EditProyectPage,
+      componentProps: {project: project},
+      cssClass: 'modalAF'
+    })
+
+    modal.present();
   }
 
   recorder;
@@ -227,7 +265,7 @@ export class FolderPage implements OnInit {
   selectSchene(i,save = false,animate = false)
   {
     if (save) {
-      this.saveProject(true,false,this.scene);
+      this.saveProject(true, false, this.scene, null, null, false);
     }
     this.to = 1;
     this.scene = i;
@@ -290,10 +328,10 @@ export class FolderPage implements OnInit {
 
   addFrame()
   {
-    this.saveProject(true,true, null, null);
+    this.saveProject(true, true, null, null, null, false);
   }
 
-  saveProject(prompt = false, frame = false, i = null, returnToPlay = null, record = null)
+  saveProject(prompt = false, frame = false, i = null, returnToPlay = null, record = null,toast = true)
   {
     setTimeout(()=>{
 
@@ -320,6 +358,9 @@ export class FolderPage implements OnInit {
       //
 
       if (prompt) {
+
+        this.capturing = true;
+        
         let contentType = "image/png";
         let base64 = this.canvasElement.toDataURL("image/png");
         let b64Data = base64.split(",")[1];
@@ -330,6 +371,7 @@ export class FolderPage implements OnInit {
         let formData = new FormData();
 
         formData.append("id", this.project.id);
+        formData.append("user_id", this.user.id);
         formData.append("file", blob);
         formData.append("order", this.project.scenes[this.scene].id);
         formData.append("frame", frame ? 'si' : 'no');
@@ -353,14 +395,38 @@ export class FolderPage implements OnInit {
           this.loading.create({message:"Sincronizando medios"}).then(l=>l.present());
         }
 
+
         domtoimage.toBlob(node)
         .then((blob) => {
             formData.append("pdf", blob);
 
             this.api.upScene(formData).subscribe(data=>{
+              this.capturing = false;
+              if (toast) {this.presentToast("Se ha guardado la escena correctamente!");}
               // console.log(data);
               localStorage.setItem('actualProject',JSON.stringify(data));
               this.project = data;
+
+              if (this.exercises.length) {
+
+                let id = this.project.id;
+
+                let idx = this.exercises.findIndex(x=>x.id == id);
+
+                console.log(this.exercises[idx],this.project);
+
+                this.exercises[idx] = this.project;
+
+                // console.log(this.exercises);
+
+                for (let i in this.exercises)
+                {
+                  this.session.pr[i].project = this.exercises[i];
+                }
+
+                localStorage.setItem('session',JSON.stringify(this.session));
+
+              }
 
               if (frame) {
                 this.scene = this.project.scenes.length -1;
@@ -381,6 +447,9 @@ export class FolderPage implements OnInit {
                 this.loading.dismiss();
                 this.pdfExercise();
               }
+
+            },err=>{
+              this.capturing = false;
             })
         });
 
@@ -403,6 +472,7 @@ export class FolderPage implements OnInit {
             let formData = new FormData();
 
             formData.append("id", this.project.id);
+            formData.append("user_id", this.user.id);
             formData.append("file", blob);
             formData.append("order", this.project.scenes[this.scene].id);
             formData.append("frame", frame ? 'si' : 'no');
@@ -422,8 +492,8 @@ export class FolderPage implements OnInit {
             formData.append("elements", JSON.stringify(elems));
 
             this.api.upScene(formData).subscribe(data=>{
-              console.log(data);
-
+              if (toast) {this.presentToast("Se ha guardado la escena correctamente!");}
+              // console.log(data);
               localStorage.setItem('actualProject',JSON.stringify(data));
               this.project = data;
 
@@ -474,8 +544,8 @@ export class FolderPage implements OnInit {
     cln.classList.add("image-holder-draggable");
     cln.style.height = itm.dataset['height'];
     cln.style.width = "auto";
-    cln.style.bottom = "0";
-    cln.style.left = "0";
+    cln.style.bottom = "100px";
+    cln.style.left = "calc(50% - 25px)";
     cln.id = "element"+(new Date().getTime());
     cln.style.position = "absolute";
 
@@ -855,6 +925,155 @@ export class FolderPage implements OnInit {
     }
   }
 
+  addText()
+  {
+    this.alert.create({message:"Escriba el texto que desea agregar",
+    inputs: [
+    {
+      type: 'text',
+      name: 'text'
+    }
+    ],
+    buttons: [
+    {
+      text:"Aceptar",
+      handler: (a) =>{
+        var cln = document.createElement('div');
+        var dv1 = document.createElement('div');
+        var dv2 = document.createElement('div');
+        var txt = document.createTextNode(a.text);
+
+        dv1.classList.add("rotable");
+
+        dv2.style.transform = 'scale(1)';
+
+        cln.classList.add("image-holder-draggable");
+        cln.style.height = "auto";
+        cln.style.width = "auto";
+        cln.style.bottom = "0";
+        cln.style.left = "0";
+        cln.id = "element"+(new Date().getTime());
+        cln.style.position = "absolute";
+
+        dv2.appendChild(txt);
+        dv1.appendChild(dv2);
+        cln.appendChild(dv1);
+
+        var touchtime = 0;
+
+        let _this = this;
+
+        cln.addEventListener('click',function(a){
+          //
+          if (touchtime == 0) {
+              // set first click
+              touchtime = new Date().getTime();
+          } else {
+              // compare first click to this click and see if they occurred within double click threshold
+              if (((new Date().getTime()) - touchtime) < 800) {
+                  // double click occurred
+                  let acButtons = [];
+                  if (_this.realizeAction == 'rotate') {
+                    acButtons = [
+                        {text:"Borrar",icon:"trash",handler:()=>{
+                          this.remove();
+                        }},
+                        {text:"Mover elementos",icon:"move-outline",handler:()=>{
+                          _this.realizeAction = 'move';
+                          _this.startToDrag();
+                        }},]
+
+                        // if (this.classList.contains('increment')) {
+                          acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
+                            let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
+                            console.log(w);
+                            w = parseInt(w)+.1;
+                            console.log(w);
+                            (this.children[0].children[0] as any).style.transform = 'scale('+w+')';
+                            return false;
+                          }},
+                          {text:"Disminuir tamaño",icon:"caret-down-outline",handler:()=>{
+                            let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
+                            console.log(w);
+                            w = parseInt(w)-.1;
+                            if (w <= 0) {
+                              return false;
+                            }
+                            (this.children[0].children[0] as any).style.transform = 'scale('+w+')';
+                            return false;
+                          }},{
+                            text:"Cambiar color", icon: "color-palette",handler:()=>{
+                              _this.actualTextId = this['id'];
+                              _this.selectColorText = true;
+                            }
+                          });
+                        // }
+
+                        acButtons.push({text:"Cancelar",});
+                      ;
+                  }else{
+                    acButtons = [
+                        {text:"Borrar",icon:"trash",handler:()=>{
+                          this.remove();
+                        }},
+                        {text:"Rotar elementos",icon:"refresh-outline",handler:()=>{
+                          _this.realizeAction = 'rotate';
+                          _this.startToDrag();
+                        }}];
+
+                        // if (this.classList.contains('increment')) {
+                          acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
+                            let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
+                            console.log(w);
+                            w = parseFloat(w)+.1;
+                            console.log(w);
+                            (this.children[0].children[0] as any).style.transform = 'scale('+w+')';
+                            return false;
+                          }},
+                          {text:"Disminuir tamaño",icon:"caret-down-outline",handler:()=>{
+                            let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
+                            console.log(w);
+                            w = parseFloat(w)-.1;
+                            if (w <= 0) {
+                              return false;
+                            }
+                            (this.children[0].children[0] as any).style.transform = 'scale('+w+')';
+                            return false;
+                          }},{
+                            text:"Cambiar color", icon: "color-palette",handler:()=>{
+                              _this.actualTextId = this['id'];
+                              _this.selectColorText = true;
+                            }
+                          });
+                        // }
+
+                        acButtons.push({text:"Cancelar",});
+                  }
+                  _this.action.create({header:"Elemento seleccionado",buttons:acButtons}).then(a=>a.present());
+                  console.log(this)
+                  touchtime = 0;
+              } else {
+                  // not a double click so set as a new first click
+                  touchtime = new Date().getTime();
+              }
+          }
+        })
+
+        // Append the cloned <li> element to <ul> with id="myList1"
+        document.getElementById("drop-element").appendChild(cln);
+      }
+    },{
+      text:"Cancelar"
+    }]}).then(a=>a.present())
+  }
+
+  applyColorText(c)
+  {
+    var elem = document.getElementById(this.actualTextId) as any;
+
+    elem.children[0].children[0].style.color = c;
+  }
+
   clearCanvas()
   {
     this.alert.create({message:"Desea borrar toda la tinta?", buttons: [
@@ -989,8 +1208,12 @@ export class FolderPage implements OnInit {
   loadRest()
   {
     setTimeout(()=>{
-      this.w = this.campo.nativeElement.offsetWidth;
-      this.h = this.campo.nativeElement.offsetHeight;
+      if (this.mainDiv.nativeElement.offsetWidth < 1024) {
+        console.log('aplicar clases')
+      }
+      console.log(this.mainDiv.nativeElement.offsetWidth);
+      this.w = 960 //this.campo.nativeElement.offsetWidth;
+      this.h = 768 //this.campo.nativeElement.offsetHeight;
 
       this.canvasElement = this.canvas.nativeElement;
       this.canvasElement.width = this.w;
@@ -1014,7 +1237,8 @@ export class FolderPage implements OnInit {
 
       }
 
-      document.getElementById('campo').style.height = this.h+'px';
+      // document.getElementById('campo').style.height = this.h+'px';
+      document.getElementById('campo').style.width = this.w+'px';
 
       this.auxCanvasElement = document.createElement('canvas');
       if (!this.auxCanvasElement) {
@@ -1142,7 +1366,7 @@ export class FolderPage implements OnInit {
     this.isRoster = true;
     this.team = i;
 
-    if (i == 3) return false;
+    if (i == 4) return false;
 
     this.styles = this.project.styles['team'+i];
 
@@ -1316,7 +1540,7 @@ export class FolderPage implements OnInit {
 
   startPlay(i = null)
   {
-    this.saveProject(true,false,null,'play',i);
+    this.saveProject(true, false, null, 'play', i, false);
   }
 
   images = [];
@@ -1658,7 +1882,7 @@ export class FolderPage implements OnInit {
 
   startpdf1()
   {
-    this.saveProject(true,false,null,'proyect');
+    this.saveProject(true, false, null, 'proyect', null, false);
   }
 
   startpdf2()
@@ -1666,7 +1890,7 @@ export class FolderPage implements OnInit {
     if (!this.api.vPro) {
       return this.api.goPro();
     }
-    this.saveProject(true,false,null,'exercise');
+    this.saveProject(true, false, null, 'exercise', null, false);
   }
 
   pdfProyect()
@@ -1683,6 +1907,33 @@ export class FolderPage implements OnInit {
       // console.log(data);
       this.api.downloadFile(data.url)
     })
+  }
+
+  presentToast(t)
+  {
+    this.toastCtrl.create({message:t,duration:3000, color:'success',cssClass:'text-center'}).then(t=>t.present());
+  }
+
+  downloadFrame()
+  {
+    var el = this.project.scenes[this.scene].pdf_element.split('/');
+
+
+    this.api.downloadScene({scene:el[el.length-1]}).subscribe(data=>{
+      console.log(data);
+
+      this.api.downloadImage(data[0],'Project Frame '+this.scene+1);
+    })
+  }
+
+  async openCalendar()
+  {
+    const modal = await this.modal.create({
+      component: CalendarPage,
+      cssClass: 'modalAF'
+    })
+
+    modal.present();
   }
 
 }

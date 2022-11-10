@@ -7,7 +7,7 @@
 <ion-content>
 
   <div id="modal-header">
-    Abrir Ejercicio
+    Abrir Tarea
   </div>
   <div id="outer-modal">
     <div id="inner-modal">
@@ -26,17 +26,26 @@
 
 
         <ion-row>
-          <ion-col size="3" style="text-align: center;" *ngFor="let p of projects | search:query; let i = index" (click)="selectedDoc = i; openDoc(p)">
+          <ion-col size="3" style="text-align: center;" *ngFor="let p of projects | search:query:'name'; let i = index" (click)="selectedDoc = i; openDoc(p)">
 
             <div style="padding: 8px; margin-bottom: 20px;" [ngClass]="{'selectedDoc':selectedDoc == i}">
 
               <span style="position: absolute; right: 3px; top: 1px;">
-                <ion-button slot="icon-only" color="danger" size="small" (click)="delete(p.id)">
+                <ion-button slot="icon-only" color="danger" size="small" (click)="delete(p.id)" *ngIf="user.id == p.user_id">
                   <ion-icon name="trash"></ion-icon>
                 </ion-button>
               </span>
-              
-              <img src="assets/icono-documento.svg" alt="" style="width: 40%;">
+
+              <div style="position: relative;" style="height: 91px;">
+
+                <div style="width: 135px; height: 91px; background-size: cover; background-position: center; margin: auto;" [ngStyle]="{'background-image':'url('+p.scenes[0].pdf_image+')'}">
+                  
+                </div>
+                
+                <!-- <img [src]="p.scenes[0].pdf_image" alt="" style="position: absolute; height: 80px;"> -->
+                <!-- <img [src]="'assets/terreno'+p.terrain+'.svg'" alt="" style="height: 80px;"> -->
+
+              </div>
 
               <div style="position: relative; top: 8px; text-align: center;">
                 {{p.name}}<br>

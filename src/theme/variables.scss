@@ -200,7 +200,7 @@
     --ion-text-color: #ffffff;
     --ion-text-color-rgb: 255,255,255;
 
-    --ion-border-color: #222222;
+    --ion-border-color: #0f0f0f;
 
     --ion-color-step-50: #1e1e1e;
     --ion-color-step-100: #2a2a2a;
@@ -236,6 +236,10 @@
   color: #fff;
 }
 
+app-login {
+  // background-color: #fff;
+}
+
 .nocursor { cursor:none !important; }
 
 .menu-button-holder {
@@ -245,7 +249,7 @@
 
 .menu-button {
   clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0 90%, 0 10%);
-  background-color: #6dd50a;
+  background-color: #3498db;
   height: 82px;
   width: 80%;
   max-width: 110px;
@@ -254,7 +258,7 @@
   &:before {
     content: "";
     clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0 90%, 0 10%);
-    background-color: #222;
+    background-color: #0f0f0f;
     height: 80px;
     width: calc(100% - 2px);
     margin: auto;
@@ -267,7 +271,7 @@
 
   .inner-menu-button {
     clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0 90%, 0 10%);
-    background-color: #6dd50a;
+    background-color: #3498db;
     height: 72px;
     width: 92%;
     margin: auto;
@@ -276,7 +280,7 @@
     &:before {
       content: "";
       clip-path: polygon(10% 0, 90% 0, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0 90%, 0 10%);
-      background-color: #222;
+      background-color: #0f0f0f;
       height: 70px;
       width: calc(100% - 2px);
       margin: auto;
@@ -285,14 +289,14 @@
       top: 1px;
     }
     span {
-      font-size: 10px;
+      font-size: 14px;
       color: #fff;
       position: relative;
       display: block;
       text-align: center;
     }
     .image-holder {
-      height: 55px;
+      height: 42px;
       position: relative;
       img {
         position: absolute;
@@ -302,7 +306,7 @@
         right: 0;
         bottom: 0;
         top: 0;
-        max-height: 60px;
+        max-height: 24px;
       }
     }
 
@@ -311,8 +315,8 @@
 
 .left-buttons {
   position: absolute;
-  bottom: 140px;
-  left: 0;
+  bottom: 120px;
+  left: -80px;
   width: 100%;
   padding: 0 10px;
   &:after {
@@ -322,12 +326,12 @@
 }
 .inner-left-button {
   float: left;
-  background-color: #222;
+  background-color: #0f0f0f;
   border-radius: 50px;
   padding: 12px;
   width: 60px;
   height: 60px;
-  margin-left: 50px;
+  margin-left: 30px;
   position: relative;
   transition: all 200ms;
   top: -20px;
@@ -355,9 +359,9 @@
 
 .right-buttons {
   position: absolute;
-  bottom: 140px;
-  left: 0;
-  width: 100%;
+  bottom: 120px;
+  right: 0;
+  width: 400px;
   padding: 0 10px;
   &:after {
     content:"";
@@ -366,7 +370,7 @@
 }
 .inner-right-button {
   float: right;
-  background-color: #222;
+  background-color: #0f0f0f;
   border-radius: 50px;
   padding: 12px;
   width: 60px;
@@ -387,9 +391,9 @@
 
 .modalAF {
   .modal-wrapper {
-    width: 80%;
-    max-width: 815px;
-    height: 550px;
+    width: 95%;
+    max-width: 1280px;
+    height: 700px;
     background-color: transparent;
   }
 }
@@ -434,14 +438,15 @@
 .button-login {
   width: 80%;
   margin: auto;
-  background-color: #27d8a1;
-  box-shadow: 0 0 30px #27d8a1;
+  background-color: #3498db;
+  box-shadow: 0 0 30px #3498db;
   display: block;
   margin-top: 10px;
   color: #fff;
   padding: 18px 0;
   border-radius: 8px;
-  font-size: 20px;
+  font-size: 16px;
+  line-height: 20px;
   outline: none;
 }
 
@@ -459,7 +464,7 @@
   width: 100%;
   font-size: 18px;
   color: #333;
-  box-shadow: inset 0 0 3px 4px lightgreen;
+  box-shadow: inset 0 0 3px 4px #99cbed;
   border-radius: 6px;
   border: none;
   background-color: #fff;
@@ -530,12 +535,16 @@
   }
 }
 
+.text-center {
+  text-align: center;
+}
+
 .tools img {
   margin: 17px auto !important;
 }
 
 .brush-selected {
-  color: lightgreen;
+  color: #99cbed;
 }
 
 .del-dis {
@@ -569,4 +578,84 @@ textarea, select, input {
 .outCanvas {
   position: absolute;
   z-index: 9999;
+}
+
+#outer-modal:before
+{
+    background-color: #3498db !important;
+    background-image: none !important;
+}
+
+.row-bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.ui-sortable-placeholder {
+  width: 260px;
+  max-width: 48%;
+  height: 182px;
+  float: left;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  background-color: red;
+}
+
+.preselect {
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: -50px;
+}
+
+.preselect2
+{
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 100px;
+  box-shadow: 0 0 2px #333;
+  background-color: #ccc;
+  background-size: cover;
+  background-position: center;
+}
+
+#element-to-copy {
+  // width: fit-content;
+  // left: 25%;
+  position: relative;
+}
+
+table, tbody, .fc-daygrid-body {
+  width: 100% !important;
+}
+
+.fc-scrollgrid-sync-table {
+  height: 527px !important;
+}
+
+
+
+#drop-element {
+  .w25 {
+    width: 25px !important;
+  }
+  .w30 {
+    width: 30px !important;
+  }
+  .w40 {
+    width: 40px !important;
+  }
+  .w60 {
+    width: 60px !important;
+  }
+  .w80 {
+    width: 80px !important;
+  }
+  .w90 {
+    width: 90px !important;
+  }
+  .w110 {
+    width: 110px !important;
+  }
 }

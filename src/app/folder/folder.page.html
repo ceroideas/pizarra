@@ -11,7 +11,8 @@
 
   <img src="assets/loader.gif" alt="" style="position: absolute; top: 0; right: 0; width: 4px; z-index: 9999;" *ngIf="recorder">
 
-  <img src="assets/logo-f.svg" alt="" style="position: absolute; top: 16px; right: 16px; width: 200px; z-index: 9999; opacity: .6;" *ngIf="recorder">
+  <!-- <img src="assets/logo-f.png" alt="" style="position: absolute; bottom: 16px; right: 16px; width: 200px; z-index: 10000; opacity: .6;" *ngIf="recorder"> -->
+  <span style="position: absolute; bottom: 200px; right: 16px; display: block; z-index: 10000; font-size: 32px;" *ngIf="recorder"><i>www.afecfa.es</i></span>
   <!-- <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{ folder }}</ion-title>
@@ -23,6 +24,14 @@
 
   <div id="container">
 
+    <div style="position: absolute; font-size: 10px; top: 0; left: 0">{{platform.width()}}x{{platform.height()}} DPR:{{dpr}}</div>
+
+    <div class="list-of-colors" style="position: absolute; top: 8px; margin: auto; left: 0; right: 0; z-index: 10000;" *ngIf="selectColorText">
+      <div *ngFor="let c of colors" class="color" (click)="applyColorText(c); selectColorText = false;" [ngStyle]="{'background-color':c}">
+        
+      </div>
+    </div>
+
     <div class="teams team1" *ngIf="project && project.team1 && !project.isExercise">
       <div [ngStyle]="{'background-image':'url('+project.team1.image+')'}" class="team-image">
       </div>
@@ -31,12 +40,25 @@
       <h1 class="scores">{{project.home_score}}</h1>
     </div>
 
-    <div style="width: 259px; background-color: #444;" *ngIf="exercises.length">
-      <h4 *ngIf="!showSession" (click)="showSession = true" style="margin: 0; padding: 6px 0; cursor: pointer;">Sesión actual <ion-icon style="position: relative; top: 4px;" name="caret-down"></ion-icon></h4>
+    <div [ngClass]="{ 'expanded' : expanded }" style="left: -220px; width: 220px; background-color: #444; position: absolute; z-index: 10000; transition: all 200ms;" *ngIf="exercises.length">
 
-      <h4 *ngIf="showSession" (click)="showSession = false" style="margin: 0; padding: 6px 0; cursor: pointer;">Sesión actual <ion-icon style="position: relative; top: 4px;" name="caret-up"></ion-icon></h4>
+        <div *ngIf="!expanded" style="background-color: #444; position: absolute; top: 0; right: -40px; width: 40px; font-size: 36px; text-align: center; height: 36px;" (click)="expanded = true;">
+          <ion-icon name="menu-outline" style="color: #fff"></ion-icon>
+        </div>
 
-      <ul *ngIf="exercises.length && showSession" style="z-index: 10000; width: 259px;">
+        <div *ngIf="expanded" style="background-color: #444; position: absolute; top: 0; right: -40px; width: 40px; font-size: 36px; text-align: center; height: 36px;" (click)="expanded = null;">
+          <ion-icon name="close-outline" style="color: #fff"></ion-icon>
+        </div>
+
+
+      <h5 style="margin: 0; padding: 6px 0; cursor: pointer;">Sesión actual</h5>
+
+      <!-- <h4 *ngIf="!showSession" (click)="showSession = true" style="margin: 0; padding: 6px 0; cursor: pointer;">Sesión actual <ion-icon style="position: relative; top: 4px;" name="caret-down"></ion-icon></h4> -->
+
+      <!-- <h4 *ngIf="showSession" (click)="showSession = false" style="margin: 0; padding: 6px 0; cursor: pointer;">Sesión actual <ion-icon style="position: relative; top: 4px;" name="caret-up"></ion-icon></h4> -->
+
+      <!-- <ul *ngIf="exercises.length && showSession" style="z-index: 10000; width: 220px;"> -->
+      <ul style="z-index: 10000; width: 220px;">
         <li class="ui-state-default" [attr.data-id]="o.id" *ngFor="let o of exercises"
         (click)="selectExercise(o)"
         [ngClass]="{'selected-ex':project.id == o.id}">
@@ -47,23 +69,24 @@
               <img [src]="'assets/terreno'+o.terrain+'.svg'" alt="">
             </div>
 
-            <div style="margin-left: 8px; width: 100%; line-height: 1.8;">
-              <h6>{{o.name}}</h6>
-              <ion-icon [name]="'radio-button-'+(o.difficult >= 1 ? 'on' : 'off')+'-outline'"></ion-icon>
-              <ion-icon [name]="'radio-button-'+(o.difficult >= 2 ? 'on' : 'off')+'-outline'"></ion-icon>
-              <ion-icon [name]="'radio-button-'+(o.difficult >= 3 ? 'on' : 'off')+'-outline'"></ion-icon>
-              <ion-icon [name]="'radio-button-'+(o.difficult >= 4 ? 'on' : 'off')+'-outline'"></ion-icon>
-              <ion-icon [name]="'radio-button-'+(o.difficult >= 5 ? 'on' : 'off')+'-outline'"></ion-icon> <br>
-              Desde: {{o.min_age}} Hasta: {{o.max_age}} años <br>
+            <div style="margin-left: 8px; width: 100%; line-height: 1.8; padding: 4px;">
+                <h6>{{o.name}}</h6>
+                <ion-icon [name]="'radio-button-'+(o.difficult >= 1 ? 'on' : 'off')+'-outline'"></ion-icon>
+                <ion-icon [name]="'radio-button-'+(o.difficult >= 2 ? 'on' : 'off')+'-outline'"></ion-icon>
+                <ion-icon [name]="'radio-button-'+(o.difficult >= 3 ? 'on' : 'off')+'-outline'"></ion-icon>
+                <ion-icon [name]="'radio-button-'+(o.difficult >= 4 ? 'on' : 'off')+'-outline'"></ion-icon>
+                <ion-icon [name]="'radio-button-'+(o.difficult >= 5 ? 'on' : 'off')+'-outline'"></ion-icon> <br>
+                <!-- Desde: {{o.min_age}} Hasta: {{o.max_age}} años <br> -->
 
-              Participantes: {{o.participants}} <br>
+                <b>Objetivos Principales</b>
+                <div style="color: #c0c0c0; margin-bottom: 4px">{{o.objetives}}&nbsp;</div>
 
-              <!-- Descripción
-              <p>{{o.description}}</p>
+                <!-- <b>Objetivos Secundarios</b>
+                <div>{{o.objetives_sec}}&nbsp;</div> -->
 
-              Objetivos
-              <p>{{o.objectives}}</p> -->
-            </div>
+                Participantes: {{o.participants}} <br>
+
+              </div>
           </div>
         </li>
       </ul>
@@ -79,21 +102,78 @@
       <h1 class="scores">{{project.away_score}}</h1>
     </div>
 
-    <div id="element-to-copy">
-      <img [src]="'assets/terreno'+terrain+'.svg'" alt="" id="campo" #campo (load)="loadRest()">
-      <div style="height:{{h}}px; width:{{w}}px; position: absolute;top: 20px;margin: auto;left: 0;right: 0;" id="all-scene">
 
-        <div id="drop-element" style="height:{{h+100}}px; width:{{w+100}}px; left: -50px; top: -50px;"></div>
+    <div id="element-to-copy" #elementtocopy>
+      <img [src]="'assets/terreno'+terrain+'.svg'" alt="" id="campo" #campo (load)="loadRest()">
+      <div style="height:{{h}}px; width:{{w}}px; position: absolute;top: 0px;margin: auto;left: 0;right: 0;" id="all-scene">
+
+        <div id="drop-element" style="height:{{h+0}}px; width:{{w+0}}px; left: -50px; top: -50px;"></div>
 
         <canvas #imageCanvas id="imageCanvas"
         (mousedown)="startDrawing($event)" (touchstart)="startDrawing($event)" (touchmove)="moved($event)" (mousemove)="moved($event)" (mouseup)="endDrawing($event)" (touchend)="endDrawing($event)">
           
         </canvas>
 
-        <h1 style="position: absolute; bottom: -40px; right: 0;" class="scores">{{project?.location}} - {{project?.date | date:'dd-MM-yyyy'}} {{project?.hour | date:'HH:mm'}}</h1>
+        <h1 *ngIf="project && project.jornada" style="position: absolute; bottom: -27px; left: 0;" class="scores">{{project?.competition}} - {{project?.jornada}}</h1>
+
+        <h1 *ngIf="project && project.date" style="font-size: 14px;position: absolute;bottom: -15px;right: 0;width: 40%;text-align: right;" class="scores">{{project?.location}} - {{project?.date | date:'dd-MM-yyyy'}} {{project?.hour | date:'HH:mm'}}</h1>
 
       </div>
+
+      <div [ngClass]="{ 'expanded1' : expanded1 }" style="position: absolute; top: 0px; right: -220px; transition: all 200ms; z-index: 10000;">
+        <div *ngIf="!expanded1" style="background-color: #444; position: absolute; top: 0; left: -40px; width: 40px; font-size: 36px; text-align: center; height: 36px;" (click)="expanded1 = true;">
+          <ion-icon name="menu-outline" style="color: #fff"></ion-icon>
+        </div>
+
+        <div *ngIf="expanded1" style="background-color: #444; position: absolute; top: 0; left: -40px; width: 40px; font-size: 36px; text-align: center; height: 36px;" (click)="expanded1 = null;">
+          <ion-icon name="close-outline" style="color: #fff"></ion-icon>
+        </div>
+
+        <div style="width: 220px; background-color: #444; text-align: left; padding: 8px; font-size: 12px !important;" *ngIf="project && project.isExercise">
+
+          <b>Datos del Ejercicio </b> | <span (click)="editProject(project)" style="cursor: pointer; color: #c1c1c1;">Editar</span><br> <br>
+          
+          <label>Descripcion</label>
+          <p style="font-size: 14px">{{project.description}} </p> <br>
+
+          <label>Objetivo Principal</label>
+          <p style="font-size: 14px">{{project.objetives}} </p> <br>
+
+          <label>Objetivo Secundario</label>
+          <p style="font-size: 14px">{{project.objetives_sec}} </p> <br>
+
+          <label>Condicionantes</label>
+          <p style="font-size: 14px">{{project.conditions}} </p> <br>
+
+          <label>Variantes</label>
+          <p style="font-size: 14px">{{project.variants}} </p>
+
+        </div>
+
+        <br>
+
+        <div style="width: 220px; background-color: #444; text-align: left; padding: 8px; font-size: 12px !important;" *ngIf="exercises.length">
+
+          <b>Datos de la sesión </b>: {{session?.name}}<br> <br>
+          
+          <label>Descripcion</label>
+          <p style="font-size: 14px">{{session?.description}} </p> <br>
+
+          <label>Objetivo Principal</label>
+          <p style="font-size: 14px">{{session?.objetives}} </p> <br>
+
+          <label>Objetivo Secundario</label>
+          <p style="font-size: 14px">{{session?.objetives_sec}} </p> <br>
+
+          <label>Otras consideraciones</label>
+          <p style="font-size: 14px">{{session?.notes}} </p>
+
+        </div>
+      </div>
+
     </div>
+
+    <ion-button *ngIf="project" (click)="saveProject(true)" size="small" color="warning" style="z-index: 9999; position: relative;">Guardado rápido</ion-button>
 
     <!-- <div class="list-of-tools">
 
@@ -102,7 +182,7 @@
   </div>
 
 
-    <div id="bottom-menu">
+    <div id="bottom-menu" style="z-index: 10000;">
 
       <div class="left-buttons">
 
@@ -119,6 +199,11 @@
         <div class="inner-left-button" (click)="analisis()">
           <img src="assets/football-player.svg" alt="">
           <small>ANÁLISIS <br> TÁCTICO</small>
+        </div>
+
+        <div class="inner-left-button" (click)="openCalendar()">
+          <img src="assets/calendar.png" alt="">
+          <small>CALENDARIO</small>
         </div>
 
         <div class="inner-left-button" (click)="api.goPro()" *ngIf="!api.vPro">
@@ -155,8 +240,8 @@
       <div class="menu-header">
         <span *ngIf="!isRoster">Menú</span>
         <span *ngIf="isRoster">
-          <span *ngIf="team == 3">Artículos</span>
-          <span *ngIf="team != 3">Plantilla de Equipo {{team}}</span>
+          <span *ngIf="team == 4">Artículos</span>
+          <span *ngIf="team != 4">Plantilla de Equipo {{team}}</span>
         </span>
       </div>
 
@@ -180,7 +265,7 @@
                 <div class="image-holder">
                   <img src="assets/icono-nuevo-proyecto.svg" alt="">
                 </div>
-                <span>Nuevo Ejercicio</span>
+                <span>Nueva Tarea</span>
               </div>
             </div>
           </ion-col>
@@ -191,7 +276,7 @@
                 <div class="image-holder">
                   <img src="assets/icono-abrir-proyecto.svg" style="width: 40%" alt="">
                 </div>
-                <span>Abrir Ejercicio</span>
+                <span>Abrir Tarea</span>
               </div>
             </div>
           </ion-col>
@@ -248,7 +333,7 @@
                 <div class="image-holder">
                   <img src="assets/player.svg" alt="">
                 </div>
-                <span style="position: relative; top: -8px;">Análisis de <br> Jugadores</span>
+                <span style="position: relative; top: -8px;">Análisis de <br> Futbolistas</span>
               </div>
             </div>
           </ion-col>
@@ -317,7 +402,7 @@
                 <div class="image-holder">
                   <img src="assets/icono-documento.svg" alt="" style="width: 30%;">
                 </div>
-                <span>Reportes</span>
+                <span>Informes</span>
               </div>
             </div>
           </ion-col>
@@ -334,9 +419,9 @@
           </ion-col>
         </ion-row>
 
-        <ion-row *ngIf="!isMainMenu && isRoster && team != 3">
+        <ion-row *ngIf="!isMainMenu && isRoster && team != 4">
 
-          <ion-col size="11" style="border-right: 2px green solid; margin-bottom: 8px;height: 89px; text-align: center;">
+          <ion-col size="11" style="border-right: 2px #3498db solid; margin-bottom: 8px;height: 89px; text-align: center;">
             <ion-slides [options]="{slidesPerView:11}">
               <ion-slide *ngFor="let p of roster">
                 
@@ -385,16 +470,16 @@
           
         </ion-row>
 
-        <ion-row *ngIf="!isMainMenu && isRoster && team == 3">
+        <ion-row *ngIf="!isMainMenu && isRoster && team == 4">
 
-          <ion-col size="12" style="border-right: 2px green solid; margin-bottom: 8px;height: 89px; text-align: center;">
+          <ion-col size="12" style="border-right: 2px #3498db solid; margin-bottom: 8px;height: 89px; text-align: center;">
             <ion-slides [options]="{slidesPerView:11}">
               <ion-slide *ngFor="let a of articles; let i = index">
                 
                 <div>
                   <div class="tools">
                     <div (click)="clone($event)" class="rotate0deg increment">
-                      <img class="rotable hidden-pdf" [src]="a" data-height="40px" style="width: 50px; margin: 6px auto !important; display: block; margin: auto; pointer-events: none" alt="">
+                      <img class="rotable hidden-pdf {{a.class}}" [src]="a.image" data-height="40px" style="width: 50px; margin: 6px auto !important; display: block; margin: auto; pointer-events: none" alt="">
                     </div>
                       <span>Articulo {{i+1}}</span>
                   </div>
@@ -406,8 +491,8 @@
           
         </ion-row>
 
-        <ion-row *ngIf="!isMainMenu && isCanvas">
-          <ion-col size="1" style="border-right: 2px green solid; margin-bottom: 8px;">
+        <ion-row *ngIf="!isMainMenu && isCanvas" style="position: relative; top: -10px;">
+          <ion-col size="1" style="border-right: 2px #3498db solid; margin-bottom: 8px;">
             
             <div class="tools">
               <div (click)="isEdit = true; isAnim = false;" [ngClass]="{'bg-green': isEdit}" class="brush" style="background-color: gray; background-size: 50%; border-radius: 35px; width: 35px; height: 35px; background-image: url(assets/icono-editar-2.svg)"></div>
@@ -415,7 +500,7 @@
             </div>
 
             <div class="tools">
-              <div (click)="isAnim = true; isEdit = false; saveProject(true)" [ngClass]="{'bg-green': isAnim}" class="brush" style="background-color: gray; background-size: 50%; border-radius: 35px; width: 35px; height: 35px; background-image: url(assets/icono-animar.svg)"></div>
+              <div (click)="isAnim = true; isEdit = false; saveProject(true, false, null, null, null, false)" [ngClass]="{'bg-green': isAnim}" class="brush" style="background-color: gray; background-size: 50%; border-radius: 35px; width: 35px; height: 35px; background-image: url(assets/icono-animar.svg)"></div>
               <!-- <span>Animar</span> -->
             </div>
 
@@ -423,7 +508,7 @@
 
           <ion-col size="11" *ngIf="isAnim">
             <ion-row>
-              <ion-col size="6" style="border-right: 2px green solid; margin-bottom: 8px;">
+              <ion-col size="6" style="border-right: 2px #3498db solid; margin-bottom: 8px;">
 
                 <ion-slides [options]="{slidesPerView:9.5}">
                   <ion-slide *ngFor="let fr of project.scenes; let i = index">
@@ -444,9 +529,11 @@
 
                 <ion-button *ngIf="api.desktop" size="small" color="warning" style="position: relative; top: -7px;" (click)="startPlay(true)">Exportar Mp4</ion-button>
 
+                <ion-button *ngIf="api.desktop" size="small" color="success" style="position: relative; top: -7px;" (click)="downloadFrame()">Descargar Imágen</ion-button>
+
 
               </ion-col>
-              <ion-col size="3" style="border-right: 2px green solid; margin-bottom: 8px;">
+              <ion-col size="3" style="border-right: 2px #3498db solid; margin-bottom: 8px;">
                 <ion-row>
                   <ion-col size="4" style="text-align: center;" (click)="backward()">
                     <img style="height: 48px;" src="assets/icono-atras.svg" alt="">
@@ -468,7 +555,7 @@
                   </ion-col>
                 </ion-row>
               </ion-col>
-              <ion-col size="3" style="border-right: 2px green solid; margin-bottom: 8px;">
+              <ion-col size="3" style="border-right: 2px #3498db solid; margin-bottom: 8px;">
                 <ion-row>
                   <ion-col [ngClass]="{'del-dis':project.scenes.length <= 1}" size="6" style="text-align: center;" (click)="delete()">
                     <img style="height: 40px;" src="assets/icono-papelera.svg" alt="">
@@ -483,7 +570,7 @@
             </ion-row>
           </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas">
+          <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
               <div class="brush" (click)="brush = 1; selector = 'line'; addArrow = true; setDash([])" style="background-image: url(assets/icono-flecha-simple.svg)"></div>
               <span [ngClass]="{'brush-selected':brush == 1}">Flecha recta</span>
@@ -495,7 +582,7 @@
             </div>
           </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas">
+          <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
               <div class="brush" (click)="brush = 3; selector = 'zigzag'; addArrow = false; setDash([])" style="background-image: url(assets/icono-flecha-zigzag.svg)"></div>
               <span [ngClass]="{'brush-selected':brush == 3}">Flecha ZigZag</span>
@@ -507,7 +594,7 @@
             </div>
           </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas">
+          <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
               <div class="brush" (click)="brush = 5; selector = 'line'; addArrow = false; setDash([])" style="background-image: url(assets/icono-linea-recta.svg)"></div>
               <span [ngClass]="{'brush-selected':brush == 5}">Linea Recta</span>
@@ -519,7 +606,7 @@
             </div>
           </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas">
+          <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
               <div class="brush" (click)="brush = 7; selector = 'pen'; addArrow = false; setDash([])" style="background-image: url(assets/icono-linea-zigzag.svg)"></div>
               <span [ngClass]="{'brush-selected':brush == 7}">Lápiz</span>
@@ -531,35 +618,52 @@
             </div>
           </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas">
-            <div class="tools">
-              <div class="brush" (click)="brush = 9; selector = 'square'; addArrow = false; setDash([])">
-                <ion-icon name="square-outline"></ion-icon>
-              </div>
-              <span [ngClass]="{'brush-selected':brush == 9}">Cuadrado</span>
-            </div>
+          <ion-col size="2" *ngIf="isCanvas && !isAnim">
+            
+            <ion-row>
 
-            <div class="tools">
-              <div class="brush" (click)="brush = 10; selector = 'circle'; addArrow = false; setDash([])">
-                <ion-icon name="ellipse-outline"></ion-icon>
-              </div>
-              <span [ngClass]="{'brush-selected':brush == 10}">Circulo</span>
-            </div>
+              <ion-col size="4" *ngIf="isCanvas && !isAnim">
+                <div class="tools">
+                  <div class="brush" (click)="brush = 9; selector = 'square'; addArrow = false; setDash([])">
+                    <ion-icon name="square-outline"></ion-icon>
+                  </div>
+                  <span [ngClass]="{'brush-selected':brush == 9}">Cuadrado</span>
+                </div>
+
+                <div class="tools">
+                  <div class="brush" (click)="brush = 10; selector = 'circle'; addArrow = false; setDash([])">
+                    <ion-icon name="ellipse-outline"></ion-icon>
+                  </div>
+                  <span [ngClass]="{'brush-selected':brush == 10}">Circulo</span>
+                </div>
+              </ion-col>
+
+              <ion-col size="4" *ngIf="isCanvas && !isAnim">
+                <div class="tools" (click)="brush = 11; selector = 'eraser'; addArrow = false; setDash([])">
+                  <div class="brush less" style="background-image: url(assets/icono-borrar-individual.svg)"></div>
+                  <span [ngClass]="{'brush-selected':brush == 11}">Borrar</span>
+                </div>
+
+                <div class="tools">
+                  <div class="brush less" (click)="clearCanvas()" style="background-image: url(assets/icono-borrar-todo.svg)"></div>
+                  <span>Borrar Todo</span>
+                </div>
+              </ion-col>
+
+              <ion-col size="4" *ngIf="isCanvas && !isAnim">
+                <div class="tools">
+                  <div class="brush less" (click)="addText()">
+                    <ion-icon name="text-outline"></ion-icon>
+                  </div>
+                  <span>Insertar <br> Texto</span>
+                </div>
+              </ion-col>
+            
+            </ion-row>
+
           </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas">
-            <div class="tools" (click)="brush = 11; selector = 'eraser'; addArrow = false; setDash([])">
-              <div class="brush less" style="background-image: url(assets/icono-borrar-individual.svg)"></div>
-              <span [ngClass]="{'brush-selected':brush == 11}">Borrar</span>
-            </div>
-
-            <div class="tools">
-              <div class="brush less" (click)="clearCanvas()" style="background-image: url(assets/icono-borrar-todo.svg)"></div>
-              <span>Borrar Todo</span>
-            </div>
-          </ion-col>
-
-          <ion-col size="1" *ngIf="isCanvas">
+          <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
 
               <ion-icon name="ellipse" (click)="lineWidth = 5" [ngClass]="lineWidth == 5 ? 'toolSelected' : ''" style="display: block; margin-bottom:4px; font-size: 10px;"></ion-icon>
@@ -570,7 +674,7 @@
             </div>
           </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas">
+          <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
 
               <div class="list-of-colors" *ngIf="selectColor">
@@ -585,7 +689,7 @@
             </div>
           </ion-col>
 
-          <!-- <ion-col size="1" *ngIf="isCanvas">
+          <!-- <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
               <div (click)="clone($event)" class="rotate0deg">
                 <img class="rotable" src="assets/soccer.svg" data-height="40px" style="width: 31px; display: block; margin: auto; pointer-events: none" alt=""></div>
@@ -593,9 +697,9 @@
             </div>
           </ion-col> -->
 
-          <ion-col size="1" *ngIf="isCanvas">
+          <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
-                <img src="assets/soccer.svg" (click)="selectTeam(3)" data-height="60px" style="width: 31px; display: block; margin: auto;" alt="">
+                <img src="assets/soccer.svg" (click)="selectTeam(4)" data-height="60px" style="width: 31px; display: block; margin: auto;" alt="">
 
                 <!-- <div class="team-color number" (click)="clone($event)"
                   [ngStyle]="{'color': '#fff' ,'background': 'repeating-linear-gradient(90deg,red, red 5px, blue 5px, blue 10px)'}">
@@ -606,37 +710,58 @@
             </div>
           </ion-col>
 
-          <!-- <ion-col size="1" *ngIf="isCanvas">
+          <!-- <ion-col size="1" *ngIf="isCanvas && !isAnim">
             <div class="tools">
                 <img src="assets/player.svg" (click)="clone($event)" data-height="60px" style="width: 40%; display: block; margin: auto;" alt="">
                 <span>Jugador 1</span>
             </div>
           </ion-col> -->
 
-          <ion-col size="1" *ngIf="isCanvas && project.team1">
-            <div class="tools">
-                <img src="assets/team1.svg" (click)="selectTeam(1)" data-height="60px" style="width: 31px; display: block; margin: auto;" alt="">
+          <ion-col size="2" class="ion-no-padding">
+            
+            <ion-row>
+              
+              <ion-col size="4" *ngIf="isCanvas && !isAnim && project.team1">
+                <div class="tools">
+                    <img src="assets/team1.png" (click)="selectTeam(1)" data-height="60px" style="width: 31px; display: block; margin: auto;" alt="">
 
-                <!-- <div class="team-color number" (click)="clone($event)"
-                  [ngStyle]="{'color': '#fff' ,'background': 'repeating-linear-gradient(90deg,red, red 5px, blue 5px, blue 10px)'}">
-                    10
-                  </div> -->
+                    <!-- <div class="team-color number" (click)="clone($event)"
+                      [ngStyle]="{'color': '#fff' ,'background': 'repeating-linear-gradient(90deg,red, red 5px, blue 5px, blue 10px)'}">
+                        10
+                      </div> -->
 
-                <span>Plantilla 1</span>
-            </div>
-          </ion-col>
+                    <span>Plantilla 1</span>
+                </div>
+              </ion-col>
 
-          <ion-col size="1" *ngIf="isCanvas && project.team2">
-            <div class="tools">
-                <img src="assets/team2.svg" (click)="selectTeam(2)" data-height="60px" style="width: 31px; display: block; margin: auto;" alt="">
+              <ion-col size="4" *ngIf="isCanvas && !isAnim && project.team2">
+                <div class="tools">
+                    <img src="assets/team2.png" (click)="selectTeam(2)" data-height="60px" style="width: 31px; display: block; margin: auto;" alt="">
 
-                <!-- <div class="team-color number" (click)="clone($event)"
-                  [ngStyle]="{'color': '#fff' ,'background': 'repeating-linear-gradient(90deg,red, red 5px, blue 5px, blue 10px)'}">
-                    10
-                  </div> -->
+                    <!-- <div class="team-color number" (click)="clone($event)"
+                      [ngStyle]="{'color': '#fff' ,'background': 'repeating-linear-gradient(90deg,red, red 5px, blue 5px, blue 10px)'}">
+                        10
+                      </div> -->
 
-                <span>Plantilla 2</span>
-            </div>
+                    <span>Plantilla 2</span>
+                </div>
+              </ion-col>
+
+              <ion-col size="4" *ngIf="isCanvas && !isAnim && project.team3">
+                <div class="tools">
+                    <img src="assets/team3.png" (click)="selectTeam(3)" data-height="60px" style="width: 31px; display: block; margin: auto;" alt="">
+
+                    <!-- <div class="team-color number" (click)="clone($event)"
+                      [ngStyle]="{'color': '#fff' ,'background': 'repeating-linear-gradient(90deg,red, red 5px, blue 5px, blue 10px)'}">
+                        10
+                      </div> -->
+
+                    <span>Plantilla 3</span>
+                </div>
+              </ion-col>
+
+            </ion-row>
+
           </ion-col>
 
         </ion-row>

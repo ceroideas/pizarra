@@ -19,7 +19,7 @@
 	</div>
 
 	<div id="modal-header" *ngIf="step == 4">
-		Datos del Jugador
+		Datos del/la Futbolista
 	</div>
 
 	<div id="outer-modal">
@@ -31,7 +31,7 @@
 
 					<ion-row>
 						
-						<ion-col size="12" style="border-right: 2px solid green; min-height: 360px;">
+						<ion-col size="12" style="border-right: 2px solid green; min-height: 521px;">
 							
 							<ion-row>
 								<ion-col size="12" *ngIf="team">
@@ -162,9 +162,9 @@
 
 					<ion-row style="margin-top: 20px;">
 						<ion-col size="6">
-							<label style="position: relative; top: 0px;">Portero con equipación diferente 
+							<!-- <label style="position: relative; top: 0px;">Portero con equipación diferente 
 								<ion-toggle style="position: relative; top: 14px;"></ion-toggle>
-							</label>
+							</label> -->
 						</ion-col>
 
 						<ion-col size="6">
@@ -251,37 +251,47 @@
 					</ion-row>
 					
 					<ion-row style="border-bottom: 1px solid #ccc; text-align: center;">
-						<ion-col size="3">Nombre</ion-col>
-						<ion-col size="3">Número</ion-col>
-						<ion-col size="3">Posición</ion-col>
-						<ion-col size="2">Titular</ion-col>
-						<!-- <ion-col size="2">Peto</ion-col> -->
-						<ion-col size="1"></ion-col>
-						
-					</ion-row>
+            <ion-col size="2">Nombre</ion-col>
+            <ion-col size="2">Email</ion-col>
+            <ion-col size="1">Teléfono</ion-col>
+            <ion-col size="1">Número</ion-col>
+            <ion-col size="2">Posición Principal</ion-col>
+            <ion-col size="2">Posición Secundaria</ion-col>
+            <ion-col size="1">Dominancia</ion-col>
+            <!-- <ion-col size="2">Peto</ion-col> -->
+            <ion-col size="1"></ion-col>
+            
+          </ion-row>
 
-					<div style="height: 271px; overflow: auto;">
-						
+          <div style="height: 421px; overflow: auto;">
+            
 
-						<ion-row *ngFor="let r of rosters | search:query; let i = index;" style="margin: 8px 0">
-							<ion-col size="3">
-								<span class="reconfigure">
-									<select class="players" [attr.data-id]="r.id" class="form-control" (change)="updateRoster(r,$event,'player')">
-										<option selected></option>
-										<option [selected]="p.id == r.player_id" *ngFor="let p of players | double:players_selected:r.player_id" [value]="p.id">{{p.name}}</option>
-									</select>
-								</span>
-								<!-- <span class="reconfigure">{{r.player.name}}</span> -->
-							</ion-col>
-							<ion-col size="3">
-								<span class="reconfigure">
-									<input type="number" class="numbers" [attr.data-id]="r.id" class="form-control" [value]="r.number" (change)="updateRoster(r,$event,'number')">
-								</span>
-							</ion-col>
-							<ion-col size="3">
-								<span class="reconfigure">
-									<select class="positions" [attr.data-id]="r.id" class="form-control" (change)="updateRoster(r,$event,'position')">
-										<option [selected]="r.position == 'Portero'">Portero</option>
+            <ion-row *ngFor="let r of rosters | search:query; let i = index;" style="margin: 8px 0">
+              <ion-col size="2">
+                <span class="reconfigure">
+                  <select [attr.data-id]="r.id" class="players form-control" (change)="updateRoster(r,$event,'player')">
+                    <option selected></option>
+                    <option [selected]="p.id == r.player_id" *ngFor="let p of players | double:players_selected:r.player_id" [value]="p.id">{{p.name}}</option>
+                  </select>
+                </span>
+                <!-- <span class="reconfigure">{{r.player.name}}</span> -->
+              </ion-col>
+              <ion-col size="2">
+                <span class="reconfigure">{{r.player?.email}}</span>
+              </ion-col>
+              <ion-col size="1">
+                <span class="reconfigure">{{r.player?.phone}}</span>
+              </ion-col>
+              <ion-col size="1">
+                <span class="reconfigure">
+                  <input type="number" [attr.data-id]="r.id" class="numbers form-control" [value]="r.number" (change)="updateRoster(r,$event,'number')">
+                </span>
+              </ion-col>
+              <ion-col size="2">
+                <span class="reconfigure">
+                  <select [attr.data-id]="r.id" class="positions form-control" (change)="updateRoster(r,$event,'position')">
+                    <option selected></option>
+                    <option [selected]="r.position == 'Portero'">Portero</option>
                     <option [selected]="r.position == 'Carrilero'">Carrilero</option>
                     <option [selected]="r.position == 'Mediocampista'">Mediocampista</option>
                     <option [selected]="r.position == 'Lateral izquierdo'">Lateral izquierdo</option>
@@ -293,36 +303,61 @@
                     <option [selected]="r.position == 'Extremo Izquierdo'">Extremo Izquierdo</option>
                     <option [selected]="r.position == 'Mediapunta'">Mediapunta</option>
                     <option [selected]="r.position == 'Delantero'">Delantero</option>
-									</select>
-								</span>
-							</ion-col>
-							<ion-col size="2">
-								<span class=""><ion-toggle [checked]="r.titular" style="margin-top: 4px; padding-left: 0"></ion-toggle></span>
-							</ion-col>
-							<!-- <ion-col size="2">
-								<div class="team-logo" [ngStyle]="{'background-color': (r.peto || '#fff') }"></div>
-							</ion-col> -->
-							<ion-col size="1">
-								<span class="">
-									<ion-button slot="icon-only" color="danger">
-										<ion-icon name="trash"></ion-icon>
-									</ion-button>
-								</span>
-							</ion-col>
-						</ion-row>
+                  </select>
+                </span>
+              </ion-col>
 
-						<ion-row *ngIf="rosters.length == 0">
-							<ion-col size="12" style="text-align: center; font-size: 14px;">Sin resultados</ion-col>
-						</ion-row>
+              <ion-col size="2">
+                <span class="reconfigure">
+                  <select [attr.data-id]="r.id" class="positions_2 form-control" (change)="updateRoster(r,$event,'position_2')">
+                    <option selected></option>
+                    <option [selected]="r.position_2 == 'Portero'">Portero</option>
+                    <option [selected]="r.position_2 == 'Carrilero'">Carrilero</option>
+                    <option [selected]="r.position_2 == 'Mediocampista'">Mediocampista</option>
+                    <option [selected]="r.position_2 == 'Lateral izquierdo'">Lateral izquierdo</option>
+                    <option [selected]="r.position_2 == 'Defensa central'">Defensa central</option>
+                    <option [selected]="r.position_2 == 'Lateral derecho'">Lateral derecho</option>
+                    <option [selected]="r.position_2 == 'Centrocampista Ofensivo'">Centrocampista Ofensivo</option>
+                    <option [selected]="r.position_2 == 'Centrocampista Defensivo'">Centrocampista Defensivo</option>
+                    <option [selected]="r.position_2 == 'Extremo Derecho'">Extremo Derecho</option>
+                    <option [selected]="r.position_2 == 'Extremo Izquierdo'">Extremo Izquierdo</option>
+                    <option [selected]="r.position_2 == 'Mediapunta'">Mediapunta</option>
+                    <option [selected]="r.position_2 == 'Delantero'">Delantero</option>
+                  </select>
+                </span>
+              </ion-col>
 
-					</div>
+              <ion-col size="1">
+                <span class="reconfigure">{{r.player?.side}}</span>
+              </ion-col>
+
+              <!-- <ion-col size="2">
+                <span class=""><ion-toggle [checked]="r.titular" style="margin-top: 4px; padding-left: 0"></ion-toggle></span>
+              </ion-col> -->
+              <!-- <ion-col size="2">
+                <div class="team-logo" [ngStyle]="{'background-color': (r.peto || '#fff') }"></div>
+              </ion-col> -->
+              <ion-col size="1">
+                <span class="">
+                  <ion-button slot="icon-only" color="danger">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </span>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="rosters.length == 0">
+              <ion-col size="12" style="text-align: center; font-size: 14px;">Sin resultados</ion-col>
+            </ion-row>
+
+          </div>
 
 					<ion-row>
 						<ion-col size="6">
 							<ion-row>
 								<ion-col size="6">
-									<button class="modal-button" (click)="step = 4">
-										Añadir Jugador
+									<button class="modal-button" (click)="step = 4" *ngIf="team.user_id == user.id">
+										Añadir Futbolista
 									</button>
 								</ion-col>
 							</ion-row>
@@ -330,7 +365,7 @@
 						<ion-col size="6">
 							<ion-row>
 								<ion-col size="6">
-									<button class="modal-button danger" style="width: 50%; float: right; height: 42px;" (click)="addRoster({})">
+									<button class="modal-button danger" style="width: 50%; float: right; height: 42px;" (click)="addRoster({})" *ngIf="team.user_id == user.id">
 										<ion-icon style="color: crimson;" name="add-outline"></ion-icon>
 									</button>
 								</ion-col>
@@ -353,7 +388,7 @@
 
 				<div *ngIf="step == 4">
 
-					<ion-row>
+					<ion-row style="height: 521px;">
 						<ion-col size="3">
 
 							<label class="preselect" [ngStyle]="{'background-image':'url('+player_image+')'}">
@@ -362,7 +397,7 @@
 
 						</ion-col>
 
-						<ion-col size="3">
+						<ion-col size="2">
 
 							<label class="modal-label">
 								Nombre
@@ -372,10 +407,10 @@
 
 						</ion-col>
 
-						<ion-col size="3">
+						<ion-col size="1">
 
 							<label class="modal-label">
-								Número
+								Núm.
 							</label>
 
 							<input type="text" class="modal-input" [(ngModel)]="player_number">
@@ -384,7 +419,7 @@
 
 						<ion-col size="3">
 							<label class="modal-label">
-								Posición
+								Posición Principal
 							</label>
 
 							<select [(ngModel)]="player_position" class="form-control" style="top: 10px;">
@@ -403,25 +438,52 @@
 							</select>
 						</ion-col>
 
-						<!-- <ion-col size="1">
+						<ion-col size="3">
 							<label class="modal-label">
-								Peto
+								Posición Secundaria
 							</label>
 
-							<div class="team-logo" [ngStyle]="{'background-color':'#fff'}"></div>
-						</ion-col> -->
+							<select [(ngModel)]="player_position_2" class="form-control" style="top: 10px;">
+								<option>Portero</option>
+                <option>Carrilero</option>
+                <option>Mediocampista</option>
+                <option>Lateral izquierdo</option>
+                <option>Defensa central</option>
+                <option>Lateral derecho</option>
+                <option>Centrocampista Ofensivo</option>
+                <option>Centrocampista Defensivo</option>
+                <option>Extremo Derecho</option>
+                <option>Extremo Izquierdo</option>
+                <option>Mediapunta</option>
+                <option>Delantero</option>
+							</select>
+						</ion-col>
 
 						<ion-col size="3" offset="3">
 
 							<label class="modal-label">
-								Años
+								Fecha de Nac.
 							</label>
 
-							<input type="text" class="modal-input" [(ngModel)]="player_age">							
+							<input type="date" class="modal-input" [(ngModel)]="player_bday">							
 
 						</ion-col>
 
 						<ion-col size="2">
+
+							<label class="modal-label">
+								Sexo
+							</label>
+
+							<select [(ngModel)]="player_sex" class="form-control" style="top: 10px;">
+								<option selected disabled></option>
+								<option>Masculino</option>
+								<option>Femenino</option>
+							</select>
+
+						</ion-col>
+
+						<ion-col size="1">
 
 							<label class="modal-label">
 								Peso
@@ -431,7 +493,7 @@
 
 						</ion-col>
 
-						<ion-col size="2">
+						<ion-col size="1">
 
 							<label class="modal-label">
 								Altura
@@ -442,20 +504,54 @@
 						</ion-col>
 
 						<ion-col size="2">
+
+              <label class="modal-label">
+                Dominancia
+              </label>
+
+              <select [(ngModel)]="player_side" class="form-control" style="top: 10px;">
+                <option selected disabled></option>
+                <option>Diestro</option>
+                <option>Zurdo</option>
+              </select>
+              
+            </ion-col>
+
+						<!-- <ion-col size="2">
 							<label class="modal-label">
 								Titular
 							</label>
 
 							<span class=""><ion-toggle [(ngModel)]="player_titular" style="margin-top: 4px; padding-left: 0"></ion-toggle></span>
-						</ion-col>
+						</ion-col> -->
 
-						<ion-col size="12">
-							<label class="modal-label">
-								Notas
-							</label>
+						<ion-col size="6">
 
-							<textarea [(ngModel)]="player_notes" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="6"></textarea>
-						</ion-col>
+              <label class="modal-label">
+                Teléfono de Contacto
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_phone">
+              
+            </ion-col>
+
+            <ion-col size="6">
+
+              <label class="modal-label">
+                Email de Contacto
+              </label>
+
+              <input type="text" class="modal-input" [(ngModel)]="player_email">
+              
+            </ion-col>
+
+            <ion-col size="12">
+              <label class="modal-label">
+                Características o atributos
+              </label>
+
+              <textarea [(ngModel)]="player_notes" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="6"></textarea>
+            </ion-col>
 					</ion-row>
 
 					<ion-row>

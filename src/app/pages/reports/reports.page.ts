@@ -18,15 +18,28 @@ export class ReportsPage implements OnInit {
 
   defensive_1;
   ofensive_1;
+  trans_defensive_1
+  trans_ofensive_1
   strengths_1;
   weakness_1;
   other_1;
+  prim_game_system_1;
+  sec_game_system_1;
 
   defensive_2;
   ofensive_2;
+  trans_defensive_2
+  trans_ofensive_2
   strengths_2;
   weakness_2;
   other_2;
+  prim_game_system_2;
+  sec_game_system_2;
+
+  off_stopped_ball_action_1;
+  def_stopped_ball_action_1;
+  off_stopped_ball_action_2;
+  def_stopped_ball_action_2;
 
   referee;
   conclusion;
@@ -43,43 +56,61 @@ export class ReportsPage implements OnInit {
 
   ngOnInit() {
 
+    this.api.getMyPlayers(this.user.id).subscribe((data:any)=>{
+
+      this.players = data;
+
+      /*let arr = Array.from(document.querySelectorAll('#drop-element .image-holder-draggable'));
+
+      for (let i of arr) {
+        let elem = (i.querySelector('.rotable') as any);
+        if (typeof elem.dataset['player'] != 'undefined') {
+          let j = JSON.parse(elem.dataset['player'])
+          j.number = elem.dataset['number']
+        this.players.push(j);
+        }
+      }*/
+
+      this.players_1 = this.players.filter(x=>x.team_id == this.proyect.team1.id);
+      this.players_2 = this.players.filter(x=>x.team_id == this.proyect.team2.id);
+
+      console.log(this.players_1,this.players_2);
+
+    })
+
     this.api.getMatchReport(this.proyect.id).subscribe((data:any)=>{
 
       this.report = data;
       if (data){
-        this.defensive_1 = data.defensive_1;
-        this.ofensive_1 = data.ofensive_1;
-        this.strengths_1 = data.strengths_1;
-        this.weakness_1 = data.weakness_1;
-        this.other_1 = data.other_1;
+          this.defensive_1 = data.defensive_1;
+          this.ofensive_1 = data.ofensive_1;
+          this.strengths_1 = data.strengths_1;
+          this.weakness_1 = data.weakness_1;
+          this.other_1 = data.other_1;
+          this.trans_defensive_1 = data.trans_defensive_1;
+          this.trans_ofensive_1 = data.trans_ofensive_1;
+          this.prim_game_system_1 = data.prim_game_system_1;
+          this.sec_game_system_1 = data.sec_game_system_1;
 
-        this.defensive_2 = data.defensive_2;
-        this.ofensive_2 = data.ofensive_2;
-        this.strengths_2 = data.strengths_2;
-        this.weakness_2 = data.weakness_2;
-        this.other_2 = data.other_2;
+          this.defensive_2 = data.defensive_2;
+          this.ofensive_2 = data.ofensive_2;
+          this.strengths_2 = data.strengths_2;
+          this.weakness_2 = data.weakness_2;
+          this.other_2 = data.other_2;
+          this.trans_defensive_2 = data.trans_defensive_2;
+          this.trans_ofensive_2 = data.trans_ofensive_2;
+          this.prim_game_system_2 = data.prim_game_system_2;
+          this.sec_game_system_2 = data.sec_game_system_2;
 
-        this.referee = data.referee;
-        this.conclusion = data.conclusion;
+          this.off_stopped_ball_action_1 = data.off_stopped_ball_action_1;
+          this.def_stopped_ball_action_1 = data.def_stopped_ball_action_1;
+          this.off_stopped_ball_action_2 = data.off_stopped_ball_action_2;
+          this.def_stopped_ball_action_2 = data.def_stopped_ball_action_2;
+
+          this.referee = data.referee;
+          this.conclusion = data.conclusion;
       }
     });
-
-
-    let arr = Array.from(document.querySelectorAll('#drop-element .image-holder-draggable'));
-
-    for (let i of arr) {
-      let elem = (i.querySelector('.rotable') as any);
-      if (typeof elem.dataset['player'] != 'undefined') {
-        let j = JSON.parse(elem.dataset['player'])
-        j.number = elem.dataset['number']
-      this.players.push(j);
-      }
-    }
-
-    this.players_1 = this.players.filter(x=>x.team_id == this.proyect.team1.id);
-    this.players_2 = this.players.filter(x=>x.team_id == this.proyect.team2.id);
-
-    console.log(this.players_1,this.players_2);
   }
 
   saveReport()
@@ -107,12 +138,25 @@ export class ReportsPage implements OnInit {
           strengths_1:this.strengths_1,
           weakness_1:this.weakness_1,
           other_1:this.other_1,
+          trans_defensive_1: this.trans_defensive_1,
+          trans_ofensive_1: this.trans_ofensive_1,
+          prim_game_system_1: this.prim_game_system_1,
+          sec_game_system_1: this.sec_game_system_1,
 
           defensive_2:this.defensive_2,
           ofensive_2:this.ofensive_2,
           strengths_2:this.strengths_2,
           weakness_2:this.weakness_2,
           other_2:this.other_2,
+          trans_defensive_2: this.trans_defensive_2,
+          trans_ofensive_2: this.trans_ofensive_2,
+          prim_game_system_2: this.prim_game_system_2,
+          sec_game_system_2: this.sec_game_system_2,
+
+          off_stopped_ball_action_1: this.off_stopped_ball_action_1,
+          def_stopped_ball_action_1: this.def_stopped_ball_action_1,
+          off_stopped_ball_action_2: this.off_stopped_ball_action_2,
+          def_stopped_ball_action_2: this.def_stopped_ball_action_2,
 
           referee:this.referee,
           conclusion:this.conclusion,
@@ -123,7 +167,7 @@ export class ReportsPage implements OnInit {
         }).subscribe((data:any)=>{
         a.dismiss();
 
-        this.alertCtrl.create({message:"Reporte guardado!"}).then(a=>a.present());
+        this.alertCtrl.create({message:"Informe guardado!"}).then(a=>a.present());
 
         this.modal.dismiss();
         //**//

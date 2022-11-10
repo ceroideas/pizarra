@@ -42,8 +42,22 @@ export class OpenExercisePage implements OnInit {
               this.touchtime = 0;
 
               localStorage.removeItem('session');
-              localStorage.setItem('actualProject',JSON.stringify(p));
-              this.events.publish('loadProject');
+
+              this.loadingCtrl.create().then(l=>{
+                l.present();
+
+                this.api.loadScenes(p.id).subscribe(data=>{
+
+                  l.dismiss();
+                  
+                  p.scenes = data;
+
+                  localStorage.setItem('actualProject',JSON.stringify(p));
+                  this.events.publish('loadProject');
+
+                });
+              });
+
           } else {
               // not a double click so set as a new first click
               this.touchtime = new Date().getTime();

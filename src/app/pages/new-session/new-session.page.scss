@@ -14,19 +14,26 @@ ul {
 
 #actual,#other {
   min-height: 100px;
-  height: 290px;
+  height: 370px;
   overflow: auto;
   padding-bottom: 40px;
   li {
+    width: 174px;
+    max-width: 48%;
+    height: 182px;
+    float: left;
+    margin-right: 8px;
     margin-bottom: 8px;
-    h6 {font-size: 16px; margin: 2px 0 6px;}
     background-color: #333;
+    h6 {font-size: 14px; margin: 2px 0 6px;}
     img {
       width: 100px;
     }
   }
 }
-
+#other {
+  height: 440px;
+}
 #outer-modal {
   clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
   background-color: #222;

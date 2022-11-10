@@ -16,6 +16,7 @@ export class NewExercisePage implements OnInit {
 
   team1 = null;
   team2 = null;
+  team3 = null;
 
   teams = [];
   players = [];
@@ -37,6 +38,12 @@ export class NewExercisePage implements OnInit {
   player_titular;
   player_position;
   player_notes;
+  player_sex;
+  player_bday;
+  player_position_2;
+  player_phone;
+  player_email;
+  player_side;
 
   selectedTeam = null;
 
@@ -50,13 +57,15 @@ export class NewExercisePage implements OnInit {
   selectT2M;
   selectT2B;
 
+  query;
   query1;
   query2;
 
 
   styles = {
     "team1":{number:'#ffffff',main:'#000000',back:'#9e2956',style:1},
-    "team2":{number:'#ffffff',main:'#000000',back:'#9e2956',style:1}
+    "team2":{number:'#ffffff',main:'#000000',back:'#9e2956',style:1},
+    "team3":{number:'#ffffff',main:'#000000',back:'#9e2956',style:1}
   };
   colors = [ '#000000', '#ffffff', '#9e2956', '#c2281d', '#de722f', '#edbf4c', '#5db37e', '#459cde', '#4250ad', '#802fa3' ];
 
@@ -67,6 +76,11 @@ export class NewExercisePage implements OnInit {
   max_age;
   description;
   objectives;
+  objectives_secondary;
+  conditions;
+  variants;
+
+  show_all;
 
   players_selected = [];
 
@@ -201,7 +215,14 @@ export class NewExercisePage implements OnInit {
           height:this.player_height,
           position:this.player_position,
           titular:this.player_titular,
-          notes:this.player_notes
+          notes:this.player_notes,
+
+          sex:this.player_sex,
+          bday:this.player_bday,
+          position_2:this.player_position_2,
+          phone:this.player_phone,
+          email:this.player_email,
+          side:this.player_side,
 
         }).subscribe((data:any)=>{
         a.dismiss();
@@ -217,6 +238,13 @@ export class NewExercisePage implements OnInit {
         this.player_titular = null;
         this.player_position = null;
         this.player_notes = null;
+
+        this.player_sex = null;
+        this.player_bday = null;
+        this.player_position_2 = null;
+        this.player_phone = null;
+        this.player_email = null;
+        this.player_side = null;
         //**//
       },err=>{
         a.dismiss();
@@ -310,6 +338,10 @@ export class NewExercisePage implements OnInit {
       max_age:this.max_age,
       description:this.description,
       objectives:this.objectives,
+      objectives_secondary:this.objectives_secondary,
+      conditions:this.conditions,
+      variants:this.variants,
+      show_all:this.show_all,
       terrain:this.terreno,
       user_id:this.user.id,
       name:this.name,
@@ -317,6 +349,7 @@ export class NewExercisePage implements OnInit {
       styles:this.styles,
       team1:this.team1 ? this.team1.id : null,
       team2:this.team2 ? this.team2.id : null,
+      team3:this.team3 ? this.team3.id : null,
       isExercise: 1
     };
 
@@ -326,6 +359,7 @@ export class NewExercisePage implements OnInit {
       l.present()
       this.api.upProject(data).subscribe(data=>{
         l.dismiss();
+        localStorage.removeItem('session');
         localStorage.setItem('actualProject',JSON.stringify(data));
         this.events.publish('loadProject');
         this.modal.dismiss();

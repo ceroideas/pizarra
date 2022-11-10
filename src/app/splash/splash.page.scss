@@ -12,3 +12,14 @@ ion-content {
 		max-width: 400px;
 	}
 }
+
+img {
+	color: #e00;
+	opacity: .4;
+	animation: beat .4s infinite alternate;
+	transform-origin: center;
+}
+
+@keyframes beat{
+	to { transform: scale(.5); opacity: 1 }
+}

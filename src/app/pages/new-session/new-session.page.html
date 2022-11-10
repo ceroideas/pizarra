@@ -27,28 +27,36 @@
             </ion-col>
           </ion-row>
           
-          <ion-row style="border-bottom: 1px solid #ccc; text-align: center;">
-            <ion-col size="3">Nombre</ion-col>
+          <ion-row style="border-bottom: 1px solid #ccc;">
+            <ion-col size="2">Nombre</ion-col>
             <ion-col size="1">Duración</ion-col>
-            <ion-col size="4">Descripción</ion-col>
-            <ion-col size="2">Dificultad</ion-col>
-            <ion-col size="2"></ion-col>
+            <ion-col size="1">Fecha</ion-col>
+            <ion-col size="3">Objetivos</ion-col>
+            <ion-col size="2">Descripción</ion-col>
+            <ion-col size="2">Complejidad</ion-col>
+            <ion-col size="1"></ion-col>
           </ion-row>
 
-          <div style="height: 271px; overflow: auto;">
+          <div style="height: 421px; overflow: auto;">
             
 
             <ion-row *ngFor="let s of sessions | search:query1; let i = index;" style="margin: 8px 0" [ngClass]="{'selectedTeam': session?.id == s.id}">
-              <ion-col size="3" (click)="session = s">
+              <ion-col size="2" (click)="session = s">
                 <span class="reconfigure">{{s.name}}</span>
               </ion-col>
               <ion-col size="1" (click)="session = s">
                 <span class="reconfigure">{{s.duration}} min</span>
               </ion-col>
-              <ion-col size="4" (click)="session = s">
+              <ion-col size="1" (click)="session = s">
+                <span class="reconfigure">{{s.date}}</span>
+              </ion-col>
+              <ion-col size="3" (click)="session = s">
+                <span class="reconfigure">{{s.objetives}}</span>
+              </ion-col>
+              <ion-col size="2" (click)="session = s">
                 <span class="reconfigure">{{s.description}}</span>
               </ion-col>
-              <ion-col size="2" style="text-align: center;">
+              <ion-col size="2" style="text-align: left;">
                 <br>
                 <ion-icon [name]="'radio-button-'+(s.difficult >= 1 ? 'on' : 'off')+'-outline'"></ion-icon>
                 <ion-icon [name]="'radio-button-'+(s.difficult >= 2 ? 'on' : 'off')+'-outline'"></ion-icon>
@@ -56,7 +64,7 @@
                 <ion-icon [name]="'radio-button-'+(s.difficult >= 4 ? 'on' : 'off')+'-outline'"></ion-icon>
                 <ion-icon [name]="'radio-button-'+(s.difficult >= 5 ? 'on' : 'off')+'-outline'"></ion-icon>
               </ion-col>
-              <ion-col size="2">
+              <ion-col size="1">
                 <span class="">
                   <ion-button slot="icon-only" color="danger" (click)="delete(s.id)">
                     <ion-icon name="trash"></ion-icon>
@@ -139,7 +147,7 @@
             <ion-col size="6">
 
               <label class="modal-label">
-                Dificultad
+                Complejidad
               </label> <br>
 
               <select class="form-control" [(ngModel)]="difficult">
@@ -152,6 +160,32 @@
                 </select>
             </ion-col>
 
+            <ion-col size="6">
+
+              <label class="modal-label">
+                Fecha
+              </label>
+
+              <input type="date" class="modal-input" [(ngModel)]="date">
+            </ion-col>
+
+
+            <ion-col size="12">
+              <label class="modal-label">
+                Objetivos Principales
+              </label>
+
+              <textarea [(ngModel)]="objectives" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="12">
+              <label class="modal-label">
+                Objetivos Secundarios
+              </label>
+
+              <textarea [(ngModel)]="objectives_sec" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
             <ion-col size="12">
               <label class="modal-label">
                 Descripción
@@ -159,15 +193,15 @@
 
               <textarea [(ngModel)]="description" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
             </ion-col>
+          </ion-row>
 
             <ion-col size="12">
               <label class="modal-label">
-                Objetivos
+                Otras consideraciones
               </label>
 
-              <textarea [(ngModel)]="objectives" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+              <textarea [(ngModel)]="notes" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
             </ion-col>
-          </ion-row>
 
           <ion-row>
             <ion-col size="6" offset="6">
@@ -193,43 +227,55 @@
 
         <div *ngIf="step == 3">
 
-          <ion-row>
+          <ion-row style="height: 521px;">
             
-            <ion-col size="6" style="border-right: 2px solid green; min-height: 360px;">
+            <ion-col size="6" style="border-right: 2px solid green; min-height: 521px;">
               
               <ion-row>
 
                 <ion-col size="12">
                   <div class="teamName" style="margin: 0;">
-                    Lista de ejercicios
+                    Catálogo de ejercicios
                   </div>
                 </ion-col>
                 <ion-col size="12">
 
+                  <ion-row>
+                    <ion-col size="12">
+                      <div id="search-doc" style="width: 100%;">
+                        <ion-icon name="search"></ion-icon>
+                        <input type="text" [(ngModel)]="query">
+                        <div style="clear: both;"></div>
+                      </div>    
+                    </ion-col>
+                  </ion-row>
+
                   <ul id="other">
-                    <li class="ui-state-default" [attr.data-id]="o.id" *ngFor="let o of others">
+                    <li class="ui-state-default" [attr.data-id]="o.id" *ngFor="let o of others | search:query:'name'">
                       <!-- <span class="ui-icon ui-icon-arrowthick-2-n-s"></span> -->
-                      <div style="display: flex;">
+                      <div style="display: block;">
                         <div style="display: flex;">
-                          <img [src]="'assets/terreno'+o.terrain+'.svg'" alt="" id="campo">
+                          <div style="width: 100%; height: 60px; background-size: cover; background-position: center; margin: auto;" [ngStyle]="{'background-image':'url('+o.scenes[0].pdf_image+')'}">
+                          </div>
                         </div>
 
-                        <div style="margin-left: 8px; width: 100%; line-height: 1.8;">
+                        <div style="margin-left: 8px; width: 100%; line-height: 1.8; padding: 4px; overflow: auto; height: 118px;">
                           <h6>{{o.name}}</h6>
                           <ion-icon [name]="'radio-button-'+(o.difficult >= 1 ? 'on' : 'off')+'-outline'"></ion-icon>
                           <ion-icon [name]="'radio-button-'+(o.difficult >= 2 ? 'on' : 'off')+'-outline'"></ion-icon>
                           <ion-icon [name]="'radio-button-'+(o.difficult >= 3 ? 'on' : 'off')+'-outline'"></ion-icon>
                           <ion-icon [name]="'radio-button-'+(o.difficult >= 4 ? 'on' : 'off')+'-outline'"></ion-icon>
                           <ion-icon [name]="'radio-button-'+(o.difficult >= 5 ? 'on' : 'off')+'-outline'"></ion-icon> <br>
-                          Desde: {{o.min_age}} Hasta: {{o.max_age}} años <br>
+                          <!-- Desde: {{o.min_age}} Hasta: {{o.max_age}} años <br> -->
+
+                          <b>Objetivos Principales</b>
+                          <div>{{o.objetives}}&nbsp;</div>
+
+                          <b>Objetivos Secundarios</b>
+                          <div>{{o.objetives_sec}}&nbsp;</div>
 
                           Participantes: {{o.participants}} <br>
 
-                          <!-- Descripción
-                          <p>{{o.description}}</p>
-
-                          Objetivos
-                          <p>{{o.objectives}}</p> -->
                         </div>
                       </div>
                     </li>
@@ -242,7 +288,7 @@
 
             </ion-col>
 
-            <ion-col size="6" style="min-height: 360px;">
+            <ion-col size="6" style="min-height: 570px;">
               
               <ion-row>
 
@@ -254,32 +300,34 @@
 
                 <ion-col size="12">
 
-                  <ul id="actual">
-                    <li class="ui-state-default" [attr.data-id]="a.project.id" *ngFor="let a of session?.pr">
-                      <div style="display: flex;">
-                        <div style="display: flex;">
-                          <img [src]="'assets/terreno'+a.project.terrain+'.svg'" alt="" id="campo">
+                  <ul id="actual">                      
+                      <li class="ui-state-default" [attr.data-id]="a.project?.id" *ngFor="let a of session?.pr"
+                      [ngStyle]="{'display':(a.project ? 'block' : 'none')}"
+                      >
+                        <div style="display: block;" *ngIf="a.project">
+                          <div style="display: flex;">
+                            <div style="width: 100%; height: 60px; background-size: cover; background-position: center; margin: auto;" [ngStyle]="{'background-image':'url('+a.project.scenes[0].pdf_image+')'}">
+                            </div>
+                          </div>
+
+                          <div style="margin-left: 8px; width: 100%; line-height: 1.8; padding: 4px; overflow: auto; height: 118px;">
+                            <h6>{{a.project.name}}</h6>
+                            <ion-icon [name]="'radio-button-'+(a.project.difficult >= 1 ? 'on' : 'off')+'-outline'"></ion-icon>
+                            <ion-icon [name]="'radio-button-'+(a.project.difficult >= 2 ? 'on' : 'off')+'-outline'"></ion-icon>
+                            <ion-icon [name]="'radio-button-'+(a.project.difficult >= 3 ? 'on' : 'off')+'-outline'"></ion-icon>
+                            <ion-icon [name]="'radio-button-'+(a.project.difficult >= 4 ? 'on' : 'off')+'-outline'"></ion-icon>
+                            <ion-icon [name]="'radio-button-'+(a.project.difficult >= 5 ? 'on' : 'off')+'-outline'"></ion-icon> <br>
+                            
+                            <b>Objetivos Principales</b>
+                            <div>{{a.project.objetives}}&nbsp;</div>
+
+                            <b>Objetivos Secundarios</b>
+                            <div>{{a.project.objetives_sec}}&nbsp;</div>
+
+                            Participantes: {{a.project.participants}} <br>
+                          </div>
                         </div>
-
-                        <div style="margin-left: 8px; width: 100%; line-height: 1.8;">
-                          <h6>{{a.project.name}}</h6>
-                          <ion-icon [name]="'radio-button-'+(a.project.difficult >= 1 ? 'on' : 'off')+'-outline'"></ion-icon>
-                          <ion-icon [name]="'radio-button-'+(a.project.difficult >= 2 ? 'on' : 'off')+'-outline'"></ion-icon>
-                          <ion-icon [name]="'radio-button-'+(a.project.difficult >= 3 ? 'on' : 'off')+'-outline'"></ion-icon>
-                          <ion-icon [name]="'radio-button-'+(a.project.difficult >= 4 ? 'on' : 'off')+'-outline'"></ion-icon>
-                          <ion-icon [name]="'radio-button-'+(a.project.difficult >= 5 ? 'on' : 'off')+'-outline'"></ion-icon> <br>
-                          Desde: {{a.project.min_age}} Hasta: {{a.project.max_age}} años <br>
-
-                          Participantes: {{a.project.participants}} <br>
-
-                          <!-- Descripción
-                          <p>{{a.project.description}}</p>
-
-                          Objetivos
-                          <p>{{a.project.objectives}}</p> -->
-                        </div>
-                      </div>
-                    </li>
+                      </li>
                   </ul>
                   
                 </ion-col>

@@ -2,6 +2,13 @@ ion-menu-button {
   color: var(--ion-color-primary);
 }
 
+.expanded {
+  left: 0 !important;
+}
+.expanded1 {
+  right: 0 !important;
+}
+
 #container {
   // display: flex;
   text-align: center;
@@ -9,7 +16,7 @@ ion-menu-button {
   left: 0;
   top: 0;
   width: 100%;
-  height: 110vh;
+  height: 100vh;
   background-image: url(../../assets/cesped.jpg);
   background-size: 100% 100%;
   padding: 20px 0 0;
@@ -39,7 +46,7 @@ ion-menu-button {
 #campo {
   // width: 80%;
   // max-height: 80%;
-  height: 70vh;
+  height: 600px;
 }
 
 #drop-element {
@@ -72,7 +79,7 @@ canvas {
 
 #bottom-menu {
   width: 100%;
-  height: 120px;
+  height: 100px;
   background-color: #222;
   bottom: 0;
   position: sticky;
@@ -85,14 +92,14 @@ canvas {
     text-align: center;
     background-color: #222;
     padding: 6px;
-    top: -28px;
+    top: -26px;
     position: relative;
     margin: auto;
     clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
   }
 
 .teams {
-  position: fixed;
+  position: absolute;
   top: 10px;
   img {
     height: 80px;
@@ -143,7 +150,7 @@ canvas {
 }
 
 .bg-green {
-  background-color: #007000 !important;
+  background-color: #99cbed !important;
 }
 
 .scene-circle-holder {

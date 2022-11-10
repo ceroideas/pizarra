@@ -7,7 +7,7 @@
 <ion-content>
 
   <div id="modal-header">
-    Reporte
+    Informe
   </div>
 
   <div id="outer-modal">
@@ -17,26 +17,76 @@
 
         <div *ngIf="step == 1">
 
-          <ion-row>
+          <ion-row style="height: 521px; overflow: auto;">
             <ion-col size="12">
               <label class="modal-label">
                 {{proyect.team1.name}} <span style="float: right">1/5</span>
               </label>
             </ion-col>
+
             <ion-col size="6">
               <label class="modal-label">
-                Observaciones Defensivas
+                Sistema de Juego principal
               </label>
 
-              <textarea [(ngModel)]="defensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+              <textarea [(ngModel)]="prim_game_system_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="1"></textarea>
             </ion-col>
 
             <ion-col size="6">
               <label class="modal-label">
-                Observaciones Ofensivas
+                Sistema de Juego secundario
               </label>
 
-              <textarea [(ngModel)]="ofensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+              <textarea [(ngModel)]="sec_game_system_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="1"></textarea>
+            </ion-col>
+
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Organización Defensiva
+              </label>
+
+              <textarea [(ngModel)]="defensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Organización Ofensiva
+              </label>
+
+              <textarea [(ngModel)]="ofensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Transición Defensiva
+              </label>
+
+              <textarea [(ngModel)]="trans_defensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Transición Ofensiva
+              </label>
+
+              <textarea [(ngModel)]="trans_ofensive_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Acciones a Balón Parado Defensiva
+              </label>
+
+              <textarea [(ngModel)]="def_stopped_ball_action_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Acciones a Balón Parado Ofensiva
+              </label>
+
+              <textarea [(ngModel)]="off_stopped_ball_action_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
             </ion-col>
 
             <ion-col size="6">
@@ -54,15 +104,15 @@
 
               <textarea [(ngModel)]="weakness_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
             </ion-col>
-          </ion-row>
 
-          <ion-col size="6">
+          <ion-col size="12">
               <label class="modal-label">
                 Otro
               </label>
 
               <textarea [(ngModel)]="other_1" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
             </ion-col>
+          </ion-row>
 
           <ion-row>
             <ion-col size="6">
@@ -97,7 +147,7 @@
 
         <div *ngIf="step == 2">
 
-          <ion-row>
+          <ion-row style="height: 521px; overflow: auto;">
             <ion-col size="12">
               <label class="modal-label">
                 {{proyect.team2.name}} <span style="float: right">2/5</span>
@@ -105,18 +155,67 @@
             </ion-col>
             <ion-col size="6">
               <label class="modal-label">
-                Observaciones Defensivas
+                Sistema de Juego principal
               </label>
 
-              <textarea [(ngModel)]="defensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+              <textarea [(ngModel)]="prim_game_system_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="1"></textarea>
             </ion-col>
 
             <ion-col size="6">
               <label class="modal-label">
-                Observaciones Ofensivas
+                Sistema de Juego secundario
               </label>
 
-              <textarea [(ngModel)]="ofensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+              <textarea [(ngModel)]="sec_game_system_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="1"></textarea>
+            </ion-col>
+
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Organización Defensiva
+              </label>
+
+              <textarea [(ngModel)]="defensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Organización Ofensiva
+              </label>
+
+              <textarea [(ngModel)]="ofensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Transición Defensiva
+              </label>
+
+              <textarea [(ngModel)]="trans_defensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Transición Ofensiva
+              </label>
+
+              <textarea [(ngModel)]="trans_ofensive_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Acciones a Balón Parado Defensiva
+              </label>
+
+              <textarea [(ngModel)]="def_stopped_ball_action_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
+            </ion-col>
+
+            <ion-col size="6">
+              <label class="modal-label">
+                Acciones a Balón Parado Ofensiva
+              </label>
+
+              <textarea [(ngModel)]="off_stopped_ball_action_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="2"></textarea>
             </ion-col>
 
             <ion-col size="6">
@@ -134,15 +233,15 @@
 
               <textarea [(ngModel)]="weakness_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
             </ion-col>
-          </ion-row>
 
-          <ion-col size="6">
+          <ion-col size="12">
               <label class="modal-label">
                 Otro
               </label>
 
               <textarea [(ngModel)]="other_2" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
             </ion-col>
+          </ion-row>
 
           <ion-row>
             <ion-col size="6">
@@ -177,11 +276,11 @@
 
         <div class="hidden" [ngClass]="{'show':step == 3}">
 
-          <div style="min-height: 375px; overflow: auto;">
+          <div style="min-height: 521px; overflow: auto;">
             <ion-row>
               <ion-col size="12">
                 <label class="modal-label">
-                  {{proyect.team1.name}} - Evaluación de jugadores <span style="float: right">3/5</span>
+                  {{proyect.team1.name}} - Evaluación de futbolistas <span style="float: right">3/5</span>
                 </label>
               </ion-col>
               
@@ -256,11 +355,11 @@
 
         <div class="hidden" [ngClass]="{'show':step == 4}">
 
-          <div style="min-height: 375px; overflow: auto;">
+          <div style="min-height: 521px; overflow: auto;">
             <ion-row>
               <ion-col size="12">
                 <label class="modal-label">
-                  {{proyect.team2.name}} - Evaluación de jugadores <span style="float: right">4/5</span>
+                  {{proyect.team2.name}} - Evaluación de futbolistas <span style="float: right">4/5</span>
                 </label>
               </ion-col>
               
@@ -335,7 +434,7 @@
 
         <div *ngIf="step == 5">
 
-          <div style="min-height: 375px; overflow: auto;">
+          <div style="min-height: 521px; overflow: auto;">
             <ion-row>
               <ion-col size="12">
                 <label class="modal-label">
@@ -348,7 +447,7 @@
                   Observaciones del arbitro
                 </label>
 
-                <textarea [(ngModel)]="referee" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+                <textarea [(ngModel)]="referee" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="4"></textarea>
               </ion-col>
 
               <ion-col size="12">
@@ -356,7 +455,7 @@
                   Conclusiones
                 </label>
 
-                <textarea [(ngModel)]="conclusion" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="3"></textarea>
+                <textarea [(ngModel)]="conclusion" style="width: 100%; resize: none; border-radius: 4px; padding: 8px;" rows="4"></textarea>
               </ion-col>
             </ion-row>
           </div>

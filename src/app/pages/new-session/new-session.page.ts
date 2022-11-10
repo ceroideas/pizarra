@@ -21,10 +21,14 @@ export class NewSessionPage implements OnInit {
   id;
   name;
   duration;
+  date;
   difficult = 1;
   description;
+  notes;
   objectives;
+  objectives_sec;
 
+  query;
   query1;
 
   sessions;
@@ -59,7 +63,7 @@ export class NewSessionPage implements OnInit {
 
   getSessions()
   {
-    this.api.getSessions(this.user.id).subscribe(data=>{
+    this.api.getSessions(this.user.id).subscribe((data:any)=>{
       this.sessions = data;
     })
   }
@@ -69,7 +73,9 @@ export class NewSessionPage implements OnInit {
     this.ids = [];
 
     for (let i of this.session.pr) {
-      this.ids.push(i.project.id);
+      if (i.project) {
+        this.ids.push(i.project.id);
+      }
     }
 
     this.others = [];
@@ -78,7 +84,7 @@ export class NewSessionPage implements OnInit {
     setTimeout(()=>{
       $( "#actual" ).sortable({
         connectWith: "#other",
-        placeholder: "ui-state-highlight",
+        // placeholder: "ui-state-highlight",
         update: ( event, ui )=> {
           this.ids = [];
           for (let i of Array.from(document.querySelectorAll('#actual li'))) {
@@ -90,7 +96,7 @@ export class NewSessionPage implements OnInit {
 
       $( "#other" ).sortable({
         connectWith: "#actual",
-        placeholder: "ui-state-highlight"
+        // placeholder: "ui-state-highlight"
       });
       $( "#other" ).disableSelection();
     },100)
@@ -117,9 +123,12 @@ export class NewSessionPage implements OnInit {
     this.id = s.id;
     this.name = s.name;
     this.duration = s.duration;
+    this.date = s.date;
     this.difficult = s.difficult;
     this.description = s.description;
+    this.notes = s.notes;
     this.objectives = s.objetives;
+    this.objectives_sec = s.objetives_sec;
   }
 
   open()
@@ -127,10 +136,20 @@ export class NewSessionPage implements OnInit {
     if (!this.session.pr) {
       return this.alertCtrl.create({message:"Ésta sesión no posée ningún ejercicio!", buttons: [{text:"Ok"}]}).then(a=>a.present());
     }
-    localStorage.setItem('session',JSON.stringify(this.session));
-    localStorage.setItem('actualProject',JSON.stringify(this.session.pr[0].project));
-    this.events.publish('loadProject');
+
     this.modal.dismiss();
+
+    this.loadingCtrl.create().then(l=>{
+      l.present();
+
+      this.api.loadSessionScenes(this.session.id).subscribe((data:any)=>{
+
+        l.dismiss();
+        localStorage.setItem('session',JSON.stringify(data));
+        localStorage.setItem('actualProject',JSON.stringify(data.pr[0].project));
+        this.events.publish('loadProject');
+      })
+    })
   }
 
 
@@ -152,9 +171,12 @@ export class NewSessionPage implements OnInit {
       user_id: this.user.id,
       category_id: null,
       duration: this.duration,
+      date: this.date,
       difficult: this.difficult,
       description: this.description,
-      objetives: this.objectives
+      notes: this.notes,
+      objetives: this.objectives,
+      objetives_sec: this.objectives_sec
     };
 
     console.log(data);
@@ -172,9 +194,12 @@ export class NewSessionPage implements OnInit {
         this.id = null;
         this.name = null;
         this.duration = null;
+        this.date = null;
         this.difficult = null;
         this.description = null;
+        this.notes = null;
         this.objectives = null;
+        this.objectives_sec = null;
         this.step = 1;
       })
     })
