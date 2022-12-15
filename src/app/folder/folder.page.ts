@@ -171,12 +171,10 @@ export class FolderPage implements OnInit {
       this.project = JSON.parse(localStorage.getItem('actualProject'));
       this.terrain = this.project.terrain;
 
-      document.getElementById('drop-element').innerHTML = this.project.scenes[0].schene;
-      this.preImage = this.project.scenes[0].image;
+      // document.getElementById('drop-element').innerHTML = this.project.scenes[0].schene;
+      // this.preImage = this.project.scenes[0].image;
 
-      this.loadRest();
-
-      this.scene = 0;
+      // this.scene = 0;
 
       this.exercises = [];
 
@@ -189,7 +187,8 @@ export class FolderPage implements OnInit {
         }
       }
 
-      console.log(this.exercises);
+      this.loadRest(true);
+      // console.log(this.exercises);
     });
 
     let ex = localStorage.getItem('session');
@@ -202,7 +201,164 @@ export class FolderPage implements OnInit {
 
     this.session = JSON.parse(localStorage.getItem('session'));
 
-    console.log(this.session);
+    // console.log(this.session);
+  }
+
+  resizeScenes(project)
+  {
+    // return false;
+    let elements = [];
+    for (let i of project.scenes)
+    {
+      // console.log(i.schene);
+      // let parser = new DOMParser();
+      // const doc = parser.parseFromString(i.schene, 'text/html');
+
+      let doc = $.parseHTML(i.schene);
+      var objetos = $(doc);
+
+      let html = "";
+
+      let elementos = [];
+
+      for (let j = 0; j < objetos.length;j++)
+      {
+        let initial = (objetos[j] as any).style.transform.replace('translate(','').replace(')','');
+        let dataW = (objetos[j] as any).getAttribute('data-w');
+        let dataH = (objetos[j] as any).getAttribute('data-h');
+
+        initial = initial.split(', ');
+
+        if (this.w != dataW) {
+          let neww = (this.w*parseInt(initial[0]))/parseFloat(dataW) ;
+          let newh = (this.h*parseInt(initial[1]))/parseFloat(dataH) ;
+
+          (objetos[j] as any).style.transform = 'translate('+neww+'px, '+newh+'px)';
+          // (objetos[j] as any).style.transform = 'translate(104px, -118.4px)';
+          (objetos[j] as any).setAttribute('data-x',neww);
+          (objetos[j] as any).setAttribute('data-y',newh);
+          (objetos[j] as any).setAttribute('data-w',this.w);
+          (objetos[j] as any).setAttribute('data-h',this.h);
+        }
+
+        html+=objetos[j].outerHTML;
+
+        elementos.push({id:objetos[j].id, style: objetos[j].style.transform});
+      }
+      let id = i.id;
+      elements.push({elementos,html,id});
+      // console.log(html);
+      i.schene = html;
+    }
+    if (this.w > 0) {
+      $.post(this.api.url+'/resizeScenes', {elements}, (data)=>{
+        console.log(data);
+        // localStorage.setItem('actualProject',JSON.stringify(data));
+        // this.project = data;
+      })
+
+      document.getElementById('drop-element').innerHTML = this.project.scenes[0].schene;
+      localStorage.setItem('actualProject',JSON.stringify(this.project));
+      // this.preImage = this.project.scenes[0].image;
+
+      objetos = document.getElementsByClassName('image-holder-draggable');
+
+      for (let i = 0; i < objetos.length;i++){
+
+        var touchtime = 0;
+
+        let _this = this;
+        // console.log(initial,dataW,dataH,_this.w,_this.h);
+        (objetos[i] as HTMLDivElement).addEventListener('click',function(a){
+          if (touchtime == 0) {
+              // set first click
+              touchtime = new Date().getTime();
+          } else {
+              let acButtons = [];
+              if (_this.realizeAction == 'rotate') {
+                acButtons = [
+                    {text:"Borrar",icon:"trash",handler:()=>{
+                      this.remove();
+                    }},
+                    {text:"Mover elementos",icon:"move-outline",handler:()=>{
+                      _this.realizeAction = 'move';
+                      _this.startToDrag();
+                    }},]
+
+                    if (this.classList.contains('increment')) {
+                      acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
+                        let w = (this.children[0] as any).style.width;
+                        w = parseInt(w)+5;
+                        // console.log(w);
+                        (this.children[0] as any).style.width = w+'px';
+                        return false;
+                      }},
+                      {text:"Disminuir tamaño",icon:"caret-down-outline",handler:()=>{
+                        let w = (this.children[0] as any).style.width;
+                        w = parseInt(w)-5;
+                        if (w <= 0) {
+                          return false;
+                        }
+                        (this.children[0] as any).style.width = w+'px';
+                        return false;
+                      }});
+                    }
+
+                    acButtons.push({text:"Cancelar",});
+                  ;
+              }else{
+                acButtons = [
+                    {text:"Borrar",icon:"trash",handler:()=>{
+                      this.remove();
+                    }},
+                    {text:"Rotar elementos",icon:"refresh-outline",handler:()=>{
+                      _this.realizeAction = 'rotate';
+                      _this.startToDrag();
+                    }}];
+
+                    if (this.classList.contains('increment')) {
+                      acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
+                        let w = (this.children[0] as any).style.width;
+                        w = parseInt(w)+5;
+                        // console.log(w);
+                        (this.children[0] as any).style.width = w+'px';
+                        return false;
+                      }},
+                      {text:"Disminuir tamaño",icon:"caret-down-outline",handler:()=>{
+                        let w = (this.children[0] as any).style.width;
+                        w = parseInt(w)-5;
+                        if (w <= 0) {
+                          return false;
+                        }
+                        (this.children[0] as any).style.width = w+'px';
+                        return false;
+                      }});
+                    }
+
+                    acButtons.push({text:"Cancelar",});
+              }
+              // compare first click to this click and see if they occurred within double click threshold
+              if (((new Date().getTime()) - touchtime) < 800) {
+                  // double click occurred
+                  _this.action.create({header:"Elemento seleccionado",buttons:acButtons}).then(a=>a.present());
+                  // console.log(this)
+                  touchtime = 0;
+              } else {
+                  // not a double click so set as a new first click
+                  touchtime = new Date().getTime();
+              }
+          }
+        })
+
+        if ($(objetos[i]).find('.team-color.number').length) {
+          $(objetos[i]).find('span').remove();
+          let player = $(objetos[i]).find('.team-color.number').data('player');
+          let elem = '<span style="font-size: 10px; top: -6px; position: relative;">'+player.name+'</span>';
+          $(objetos[i]).append(elem);
+        }
+
+      }
+    }
   }
 
   async editProject(project)
@@ -271,7 +427,11 @@ export class FolderPage implements OnInit {
     this.scene = i;
 
     document.getElementById('drop-element').innerHTML = this.project.scenes[i].schene;
+
+    // console.log(this.project.scenes[i].schene);
+
     this.preImage = this.project.scenes[i].image;
+    // console.log(this.project.scenes[i].image);
 
     if (animate) {
       for (let h in this.project.scenes[i-1].elements) {
@@ -292,7 +452,7 @@ export class FolderPage implements OnInit {
 
       let elem = Array.from(document.getElementsByClassName('rotable'));
 
-      console.log(elem)
+      // console.log(elem)
 
       for (let e in elem) {
         (elem[e] as HTMLElement).style.transition = 'all '+this.sceneInterval+'ms linear';
@@ -313,17 +473,17 @@ export class FolderPage implements OnInit {
           e.classList.add(classRotate);
 
           e.style.transform = style;
-          // e.style.transition = 'unset';
         }
-      },5)
+        this.loadRest();
+      },50)
     }else{
       for (let h in this.project.scenes[i].elements) {
         let e = document.getElementById(this.project.scenes[i].elements[h].element_id);
         e.style.transition = 'all 0ms linear';
       }
-    }
 
-    this.loadRest();
+      this.loadRest();
+    }
   }
 
   addFrame()
@@ -359,166 +519,196 @@ export class FolderPage implements OnInit {
 
       if (prompt) {
 
-        this.capturing = true;
-        
-        let contentType = "image/png";
-        let base64 = this.canvasElement.toDataURL("image/png");
-        let b64Data = base64.split(",")[1];
+          this.capturing = true;
+          
+          let contentType = "image/png";
+          let base64 = this.canvasElement.toDataURL("image/png");
+          let b64Data = base64.split(",")[1];
 
-        const blob = b64toBlob(b64Data, contentType);
-        const blobUrl = URL.createObjectURL(blob);
+          const blob = b64toBlob(b64Data, contentType);
+          const blobUrl = URL.createObjectURL(blob);
 
-        let formData = new FormData();
+          // console.log(blobUrl.length);
 
-        formData.append("id", this.project.id);
-        formData.append("user_id", this.user.id);
-        formData.append("file", blob);
-        formData.append("order", this.project.scenes[this.scene].id);
-        formData.append("frame", frame ? 'si' : 'no');
-        formData.append("html", document.getElementById('drop-element').innerHTML);
+          let formData = new FormData();
 
-        let elems = [];
+          formData.append("id", this.project.id);
+          formData.append("user_id", this.user.id);
+          formData.append("file", blob);
+          formData.append("order", this.project.scenes[this.scene].id);
+          formData.append("frame", frame ? 'si' : 'no');
 
-        let arr = Array.from(document.getElementsByClassName('image-holder-draggable'));
-        for (let h in arr) {
-          let style = (arr[h] as HTMLImageElement).style.transform;
-          let id = (arr[h] as HTMLImageElement).id;
-          let classR = Array.from((arr[h] as HTMLImageElement).classList).find((x:any)=>x.indexOf('rotate') != -1);
-          elems.push({style:style,id:id,classR:classR});
-        }
+          var objetos = document.getElementsByClassName('image-holder-draggable');
 
-        var node = document.getElementById('element-to-copy');
+          for (let i = 0; i < objetos.length;i++){
+            (objetos[i] as any).setAttribute('data-w',this.w);
+            (objetos[i] as any).setAttribute('data-h',this.h);
+          }
 
-        formData.append("elements", JSON.stringify(elems));
+          formData.append("html", document.getElementById('drop-element').innerHTML);
 
-        if (returnToPlay) {
-          this.loading.create({message:"Sincronizando medios"}).then(l=>l.present());
-        }
+          let elems = [];
+
+          let arr = Array.from(document.getElementsByClassName('image-holder-draggable'));
+          for (let h in arr) {
+            let style = (arr[h] as HTMLImageElement).style.transform;
+            let id = (arr[h] as HTMLImageElement).id;
+            let classR = Array.from((arr[h] as HTMLImageElement).classList).find((x:any)=>x.indexOf('rotate') != -1);
+            elems.push({style:style,id:id,classR:classR});
+          }
+
+          var node = document.getElementById('element-to-copy');
+
+          formData.append("elements", JSON.stringify(elems));
+
+          if (returnToPlay) {
+            this.loading.create({message:"Sincronizando medios"}).then(l=>l.present());
+          }
 
 
-        domtoimage.toBlob(node)
-        .then((blob) => {
-            formData.append("pdf", blob);
+          domtoimage.toBlob(node)
+          .then((blob) => {
+              formData.append("pdf", blob);
 
-            this.api.upScene(formData).subscribe(data=>{
-              this.capturing = false;
-              if (toast) {this.presentToast("Se ha guardado la escena correctamente!");}
-              // console.log(data);
-              localStorage.setItem('actualProject',JSON.stringify(data));
-              this.project = data;
+              formData.append('lastW',this.w);
+              formData.append('lastH',this.h);
 
-              if (this.exercises.length) {
+              this.api.upScene(formData).subscribe(data=>{
+                this.capturing = false;
+                if (toast) {this.presentToast("Se ha guardado la escena correctamente!");}
+                // console.log(data);
+                localStorage.setItem('actualProject',JSON.stringify(data));
+                this.project = data;
 
-                let id = this.project.id;
+                this.resizeScenes(this.project);
 
-                let idx = this.exercises.findIndex(x=>x.id == id);
+                if (this.exercises.length) {
 
-                console.log(this.exercises[idx],this.project);
+                  let id = this.project.id;
 
-                this.exercises[idx] = this.project;
+                  let idx = this.exercises.findIndex(x=>x.id == id);
 
-                // console.log(this.exercises);
+                  // console.log(this.exercises[idx],this.project);
 
-                for (let i in this.exercises)
-                {
-                  this.session.pr[i].project = this.exercises[i];
+                  this.exercises[idx] = this.project;
+
+                  // console.log(this.exercises);
+
+                  for (let i in this.exercises)
+                  {
+                    this.session.pr[i].project = this.exercises[i];
+                  }
+
+                  localStorage.setItem('session',JSON.stringify(this.session));
+
                 }
 
-                localStorage.setItem('session',JSON.stringify(this.session));
+                if (frame) {
+                  this.scene = this.project.scenes.length -1;
+                  this.selectSchene(this.scene);
+                }
 
+                if (returnToPlay == 'play') {
+                  this.loading.dismiss();
+                  this.play(record);
+                }
+
+                if (returnToPlay == 'proyect') {
+                  this.loading.dismiss();
+                  this.pdfProyect();
+                }
+
+                if (returnToPlay == 'exercise') {
+                  this.loading.dismiss();
+                  this.pdfExercise();
+                }
+
+              },err=>{
+                this.capturing = false;
+              })
+          });
+
+      }else{
+        //
+        this.alert.create({message:"Desea guardar el ejercicio?", buttons: [
+        {
+          text:"Si, guardar",
+          handler: ()=>{
+            this.loading.create().then(l=>{
+              l.present();
+
+              let contentType = "image/png";
+              let base64 = this.canvasElement.toDataURL("image/png");
+              let b64Data = base64.split(",")[1];
+
+              const blob = b64toBlob(b64Data, contentType);
+              const blobUrl = URL.createObjectURL(blob);
+
+              // console.log(blobUrl.length);
+
+              let formData = new FormData();
+
+              formData.append("id", this.project.id);
+              formData.append("user_id", this.user.id);
+              formData.append("file", blob);
+              formData.append("order", this.project.scenes[this.scene].id);
+              formData.append("frame", frame ? 'si' : 'no');
+
+              var objetos = document.getElementsByClassName('image-holder-draggable');
+
+              for (let i = 0; i < objetos.length;i++){
+                (objetos[i] as any).setAttribute('data-w',this.w);
+                (objetos[i] as any).setAttribute('data-h',this.h);
               }
 
-              if (frame) {
-                this.scene = this.project.scenes.length -1;
-                this.selectSchene(this.scene);
+              formData.append("html", document.getElementById('drop-element').innerHTML);
+
+              let elems = [];
+
+              let arr = Array.from(document.getElementsByClassName('image-holder-draggable'));
+              for (let h in arr) {
+                let style = (arr[h] as HTMLImageElement).style.transform;
+                let id = (arr[h] as HTMLImageElement).id;
+                elems.push({style:style,id:id});
               }
 
-              if (returnToPlay == 'play') {
-                this.loading.dismiss();
-                this.play(record);
-              }
+              // return console.log(elems);
 
-              if (returnToPlay == 'proyect') {
-                this.loading.dismiss();
-                this.pdfProyect();
-              }
+              formData.append("elements", JSON.stringify(elems));
 
-              if (returnToPlay == 'exercise') {
-                this.loading.dismiss();
-                this.pdfExercise();
-              }
+              formData.append('lastW',this.w);
+              formData.append('lastH',this.h);
 
-            },err=>{
-              this.capturing = false;
+              this.api.upScene(formData).subscribe(data=>{
+                if (toast) {this.presentToast("Se ha guardado la escena correctamente!");}
+                // console.log(data);
+                localStorage.setItem('actualProject',JSON.stringify(data));
+                this.project = data;
+
+                // this.resizeScenes(this.project);
+
+                if (frame) {
+                  this.scene = this.project.scenes.length -1;
+                  this.selectSchene(this.scene);
+                }
+
+                if (returnToPlay) {
+                  this.play();
+                }
+
+                l.dismiss();
+              })
+
             })
-        });
-
-    }else{
-      //
-      this.alert.create({message:"Desea guardar el ejercicio?", buttons: [
-      {
-        text:"Si, guardar",
-        handler: ()=>{
-          this.loading.create().then(l=>{
-            l.present();
-
-            let contentType = "image/png";
-            let base64 = this.canvasElement.toDataURL("image/png");
-            let b64Data = base64.split(",")[1];
-
-            const blob = b64toBlob(b64Data, contentType);
-            const blobUrl = URL.createObjectURL(blob);
-
-            let formData = new FormData();
-
-            formData.append("id", this.project.id);
-            formData.append("user_id", this.user.id);
-            formData.append("file", blob);
-            formData.append("order", this.project.scenes[this.scene].id);
-            formData.append("frame", frame ? 'si' : 'no');
-            formData.append("html", document.getElementById('drop-element').innerHTML);
-
-            let elems = [];
-
-            let arr = Array.from(document.getElementsByClassName('image-holder-draggable'));
-            for (let h in arr) {
-              let style = (arr[h] as HTMLImageElement).style.transform;
-              let id = (arr[h] as HTMLImageElement).id;
-              elems.push({style:style,id:id});
-            }
-
-            // return console.log(elems);
-
-            formData.append("elements", JSON.stringify(elems));
-
-            this.api.upScene(formData).subscribe(data=>{
-              if (toast) {this.presentToast("Se ha guardado la escena correctamente!");}
-              // console.log(data);
-              localStorage.setItem('actualProject',JSON.stringify(data));
-              this.project = data;
-
-              if (frame) {
-                this.scene = this.project.scenes.length -1;
-                this.selectSchene(this.scene);
-              }
-
-              if (returnToPlay) {
-                this.play();
-              }
-
-              l.dismiss();
-            })
-
-          })
+          }
+        },{
+          text:"Cancelar"
         }
-      },{
-        text:"Cancelar"
+        ]}).then(a=>{
+          a.present();
+        })
+        //
       }
-      ]}).then(a=>{
-        a.present();
-      })
-      //
-    }
     },500)
 
   }
@@ -544,8 +734,11 @@ export class FolderPage implements OnInit {
     cln.classList.add("image-holder-draggable");
     cln.style.height = itm.dataset['height'];
     cln.style.width = "auto";
-    cln.style.bottom = "100px";
-    cln.style.left = "calc(50% - 25px)";
+    cln.style.bottom = "0";
+    cln.style.left = "0";
+    cln.style.transform = "translate("+((this.w/2)-12)+"px, 0px)";
+    cln.setAttribute('data-x',((this.w/2)-12));
+    cln.setAttribute('data-y',0);
     cln.id = "element"+(new Date().getTime());
     cln.style.position = "absolute";
 
@@ -577,7 +770,7 @@ export class FolderPage implements OnInit {
                       acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
                         let w = this.children[0].style.width;
                         w = parseInt(w)+5;
-                        console.log(w);
+                        // console.log(w);
                         this.children[0].style.width = w+'px';
                         return false;
                       }},
@@ -608,7 +801,7 @@ export class FolderPage implements OnInit {
                       acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
                         let w = this.children[0].style.width;
                         w = parseInt(w)+5;
-                        console.log(w);
+                        // console.log(w);
                         this.children[0].style.width = w+'px';
                         return false;
                       }},
@@ -626,7 +819,7 @@ export class FolderPage implements OnInit {
                     acButtons.push({text:"Cancelar",});
               }
               _this.action.create({header:"Elemento seleccionado",buttons:acButtons}).then(a=>a.present());
-              console.log(this)
+              // console.log(this)
               touchtime = 0;
           } else {
               // not a double click so set as a new first click
@@ -653,10 +846,11 @@ export class FolderPage implements OnInit {
       this.project = JSON.parse(localStorage.getItem('actualProject'));
       this.terrain = this.project.terrain;
 
+      // this.resizeScenes(this.project);
+
       document.getElementById('drop-element').innerHTML = this.project.scenes[0].schene;
       this.preImage = this.project.scenes[0].image;
 
-      // this.loadRest();
     }
     this.startToDrag();
   }
@@ -986,15 +1180,15 @@ export class FolderPage implements OnInit {
                         // if (this.classList.contains('increment')) {
                           acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
                             let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
-                            console.log(w);
+                            // console.log(w);
                             w = parseInt(w)+.1;
-                            console.log(w);
+                            // console.log(w);
                             (this.children[0].children[0] as any).style.transform = 'scale('+w+')';
                             return false;
                           }},
                           {text:"Disminuir tamaño",icon:"caret-down-outline",handler:()=>{
                             let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
-                            console.log(w);
+                            // console.log(w);
                             w = parseInt(w)-.1;
                             if (w <= 0) {
                               return false;
@@ -1024,15 +1218,15 @@ export class FolderPage implements OnInit {
                         // if (this.classList.contains('increment')) {
                           acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
                             let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
-                            console.log(w);
+                            // console.log(w);
                             w = parseFloat(w)+.1;
-                            console.log(w);
+                            // console.log(w);
                             (this.children[0].children[0] as any).style.transform = 'scale('+w+')';
                             return false;
                           }},
                           {text:"Disminuir tamaño",icon:"caret-down-outline",handler:()=>{
                             let w = (this.children[0].children[0] as any).style.transform.replace(/[^\d.-]/g,'');
-                            console.log(w);
+                            // console.log(w);
                             w = parseFloat(w)-.1;
                             if (w <= 0) {
                               return false;
@@ -1050,7 +1244,7 @@ export class FolderPage implements OnInit {
                         acButtons.push({text:"Cancelar",});
                   }
                   _this.action.create({header:"Elemento seleccionado",buttons:acButtons}).then(a=>a.present());
-                  console.log(this)
+                  // console.log(this)
                   touchtime = 0;
               } else {
                   // not a double click so set as a new first click
@@ -1089,7 +1283,7 @@ export class FolderPage implements OnInit {
 
   startDrawing(ev) {
 
-    if (!this.isCanvas) {
+    if (!this.isCanvas || this.isAnim) {
       return false;
     }
     this.drawing = true;
@@ -1189,6 +1383,12 @@ export class FolderPage implements OnInit {
         }
 
       },
+      onend: function (event) {
+        let initial = event.target.style.transform.replace('translate(','').replace(')','');
+        initial = initial.split(', ');
+        // console.log(initial, esto.w, esto.h);
+      }
+
     })
     /*.gesturable({
       listeners: {
@@ -1205,15 +1405,26 @@ export class FolderPage implements OnInit {
       }
     })*/;
   }
-  loadRest()
+  preloadRest()
   {
+    // this.loadRest();
+    // setTimeout(()=>{
+      this.resizeScenes(this.project);
+    // },600)
+
+  }
+  loadRest(resize = false)
+  {
+    console.log('rest')
     setTimeout(()=>{
-      if (this.mainDiv.nativeElement.offsetWidth < 1024) {
+      /*if (this.mainDiv.nativeElement.offsetWidth < 1024) {
         console.log('aplicar clases')
       }
-      console.log(this.mainDiv.nativeElement.offsetWidth);
-      this.w = 960 //this.campo.nativeElement.offsetWidth;
-      this.h = 768 //this.campo.nativeElement.offsetHeight;
+      console.log(this.mainDiv.nativeElement.offsetWidth);*/
+      this.w = this.campo.nativeElement.offsetWidth; //960;
+      this.h = this.campo.nativeElement.offsetHeight; //768;
+
+      // console.log(this.w,this.h);
 
       this.canvasElement = this.canvas.nativeElement;
       this.canvasElement.width = this.w;
@@ -1221,13 +1432,15 @@ export class FolderPage implements OnInit {
 
       this.ctx = this.canvasElement.getContext('2d');
 
+      // console.log('hay imagen', this.preImage);
+
       if (this.preImage) {
 
         var img1 = new Image();
 
         img1.onload = ()=> {
             //draw background image
-            this.ctx.drawImage(img1, 0, 0);
+            this.ctx.drawImage(img1, 0, 0, this.w, this.h);
             //draw a box over the top
             // this.ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
             // this.ctx.fillRect(0, 0, 500, 500);
@@ -1238,7 +1451,8 @@ export class FolderPage implements OnInit {
       }
 
       // document.getElementById('campo').style.height = this.h+'px';
-      document.getElementById('campo').style.width = this.w+'px';
+      // document.getElementById('campo').style.width = this.w+'px';
+      document.getElementById('campo').style.width = 'auto';
 
       this.auxCanvasElement = document.createElement('canvas');
       if (!this.auxCanvasElement) {
@@ -1263,7 +1477,7 @@ export class FolderPage implements OnInit {
         var touchtime = 0;
 
         let _this = this;
-
+        // console.log(initial,dataW,dataH,_this.w,_this.h);
         (objetos[i] as HTMLDivElement).addEventListener('click',function(a){
           if (touchtime == 0) {
               // set first click
@@ -1284,7 +1498,7 @@ export class FolderPage implements OnInit {
                       acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
                         let w = (this.children[0] as any).style.width;
                         w = parseInt(w)+5;
-                        console.log(w);
+                        // console.log(w);
                         (this.children[0] as any).style.width = w+'px';
                         return false;
                       }},
@@ -1315,7 +1529,7 @@ export class FolderPage implements OnInit {
                       acButtons.push({text:"Aumentar tamaño",icon:"caret-up-outline",handler:()=>{
                         let w = (this.children[0] as any).style.width;
                         w = parseInt(w)+5;
-                        console.log(w);
+                        // console.log(w);
                         (this.children[0] as any).style.width = w+'px';
                         return false;
                       }},
@@ -1336,7 +1550,7 @@ export class FolderPage implements OnInit {
               if (((new Date().getTime()) - touchtime) < 800) {
                   // double click occurred
                   _this.action.create({header:"Elemento seleccionado",buttons:acButtons}).then(a=>a.present());
-                  console.log(this)
+                  // console.log(this)
                   touchtime = 0;
               } else {
                   // not a double click so set as a new first click
@@ -1352,6 +1566,10 @@ export class FolderPage implements OnInit {
           $(objetos[i]).append(elem);
         }
 
+      }
+
+      if (resize) {
+        this.resizeScenes(this.project);
       }
 
     },this.to)
@@ -1569,20 +1787,20 @@ export class FolderPage implements OnInit {
           this.stop(false);
         }
 
-        console.log(this.images);
+        // console.log(this.images);
 
       }else{
         this.scene++;
         this.selectSchene(this.scene,false,true);
       }
 
-    },this.sceneInterval);
+    },this.sceneInterval+100);
   }
 
   async stop(i = false)
   {
     if (this.recorder && i) {
-      console.log('hay recorder');
+      // console.log('hay recorder');
       this.recorder.stopRecording(() => {
 
           let a = document.createElement("a");
@@ -1920,7 +2138,7 @@ export class FolderPage implements OnInit {
 
 
     this.api.downloadScene({scene:el[el.length-1]}).subscribe(data=>{
-      console.log(data);
+      // console.log(data);
 
       this.api.downloadImage(data[0],'Project Frame '+this.scene+1);
     })

@@ -312,9 +312,9 @@ export class NewProjectPage implements OnInit {
 
       let elem = e.srcElement.parentNode.parentNode.parentNode;
 
-      elem.children.item(1).children.item(0).children.item(0).value = p.number;
-      elem.children.item(2).children.item(0).children.item(0).value = p.position;
-      elem.children.item(3).children.item(0).children.item(0).checked = p.titular == 1;
+      elem.children.item(4).children.item(0).children.item(0).value = p.number;
+      elem.children.item(5).children.item(0).children.item(0).children.item(0).children.item(0).value = p.position;
+      elem.children.item(5).children.item(0).children.item(1).children.item(0).children.item(0).value = p.position_2;
 
       this.api.upRosterPlayer({
         id:r.id,

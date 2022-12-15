@@ -24,7 +24,7 @@
 
   <div id="container">
 
-    <div style="position: absolute; font-size: 10px; top: 0; left: 0">{{platform.width()}}x{{platform.height()}} DPR:{{dpr}}</div>
+    <!-- <div style="position: absolute; font-size: 10px; top: 0; left: 0">{{platform.width()}}x{{platform.height()}} DPR:{{dpr}}</div> -->
 
     <div class="list-of-colors" style="position: absolute; top: 8px; margin: auto; left: 0; right: 0; z-index: 10000;" *ngIf="selectColorText">
       <div *ngFor="let c of colors" class="color" (click)="applyColorText(c); selectColorText = false;" [ngStyle]="{'background-color':c}">
@@ -104,10 +104,10 @@
 
 
     <div id="element-to-copy" #elementtocopy>
-      <img [src]="'assets/terreno'+terrain+'.svg'" alt="" id="campo" #campo (load)="loadRest()">
+      <img [src]="'assets/terreno'+terrain+'.svg'" alt="" id="campo" #campo (load)="loadRest(true)">
       <div style="height:{{h}}px; width:{{w}}px; position: absolute;top: 0px;margin: auto;left: 0;right: 0;" id="all-scene">
 
-        <div id="drop-element" style="height:{{h+0}}px; width:{{w+0}}px; left: -50px; top: -50px;"></div>
+        <div id="drop-element" style="height:{{h}}px; width:{{w}}px;"></div>
 
         <canvas #imageCanvas id="imageCanvas"
         (mousedown)="startDrawing($event)" (touchstart)="startDrawing($event)" (touchmove)="moved($event)" (mousemove)="moved($event)" (mouseup)="endDrawing($event)" (touchend)="endDrawing($event)">
@@ -500,7 +500,8 @@
             </div>
 
             <div class="tools">
-              <div (click)="isAnim = true; isEdit = false; saveProject(true, false, null, null, null, false)" [ngClass]="{'bg-green': isAnim}" class="brush" style="background-color: gray; background-size: 50%; border-radius: 35px; width: 35px; height: 35px; background-image: url(assets/icono-animar.svg)"></div>
+              <div (click)="isAnim = true; isEdit = false;" [ngClass]="{'bg-green': isAnim}" class="brush" style="background-color: gray; background-size: 50%; border-radius: 35px; width: 35px; height: 35px; background-image: url(assets/icono-animar.svg)"></div>
+              <!-- <div (click)="isAnim = true; isEdit = false; saveProject(true, false, null, null, null, false)" [ngClass]="{'bg-green': isAnim}" class="brush" style="background-color: gray; background-size: 50%; border-radius: 35px; width: 35px; height: 35px; background-image: url(assets/icono-animar.svg)"></div> -->
               <!-- <span>Animar</span> -->
             </div>
 

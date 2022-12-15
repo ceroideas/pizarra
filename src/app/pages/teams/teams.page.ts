@@ -270,9 +270,11 @@ export class TeamsPage implements OnInit {
 
       console.log(elem.children);
 
-      elem.children.item(3).children.item(0).children.item(0).value = p.number;
-      elem.children.item(4).children.item(0).children.item(0).value = p.position;
-      elem.children.item(5).children.item(0).children.item(0).value = p.position_2;
+      elem.children.item(4).children.item(0).children.item(0).value = p.number;
+
+      
+      elem.children.item(5).children.item(0).children.item(0).children.item(0).children.item(0).value = p.position;
+      elem.children.item(5).children.item(0).children.item(1).children.item(0).children.item(0).value = p.position_2;
       // elem.children.item(3).children.item(0).children.item(0).checked = p.titular == 1;
 
       this.api.upRosterPlayer({
