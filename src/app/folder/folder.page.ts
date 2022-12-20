@@ -172,9 +172,9 @@ export class FolderPage implements OnInit {
       this.terrain = this.project.terrain;
 
       // document.getElementById('drop-element').innerHTML = this.project.scenes[0].schene;
-      // this.preImage = this.project.scenes[0].image;
+      this.preImage = this.project.scenes[0].image;
 
-      // this.scene = 0;
+      this.scene = 0;
 
       this.exercises = [];
 
@@ -259,7 +259,7 @@ export class FolderPage implements OnInit {
 
       document.getElementById('drop-element').innerHTML = this.project.scenes[0].schene;
       localStorage.setItem('actualProject',JSON.stringify(this.project));
-      // this.preImage = this.project.scenes[0].image;
+      this.preImage = this.project.scenes[0].image;
 
       objetos = document.getElementsByClassName('image-holder-draggable');
 
@@ -580,7 +580,7 @@ export class FolderPage implements OnInit {
                 localStorage.setItem('actualProject',JSON.stringify(data));
                 this.project = data;
 
-                this.resizeScenes(this.project);
+                // this.resizeScenes(this.project);
 
                 if (this.exercises.length) {
 
@@ -1672,6 +1672,7 @@ export class FolderPage implements OnInit {
 
   async openProjects()
   {
+    // this.saveProject(true, false, null, null, null, false);
     const modal = await this.modal.create({
       component: OpenProjectPage,
       cssClass: 'modalAF'
@@ -1682,6 +1683,7 @@ export class FolderPage implements OnInit {
 
   async openExercise()
   {
+    // this.saveProject(true, false, null, null, null, false);
     const modal = await this.modal.create({
       component: OpenExercisePage,
       cssClass: 'modalAF'
